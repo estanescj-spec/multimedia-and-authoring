@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Rotoscope</title>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --primary:#2563eb;
+  --text:#1a1a1a;
+  --muted:#6b7280;
+  --border:#e5e7eb;
+  --bg:#fafafa;
+}
+
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+/* NAVBAR */
+.navbar{
+  position:fixed;
+  top:0;
+  width:100%;
+  height:68px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 60px;
+  background:rgba(255,255,255,0.92);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(37,99,235,0.12);
+  border-left:none;
+  border-right:none;
+  border-top:none;
+  box-shadow:0 12px 22px -14px rgba(15,23,42,0.42);
+  z-index:9999;
+  transition:background 0.3s,box-shadow 0.3s,border-color 0.3s;
+}
+.navbar.scrolled{
+  background:rgba(255,255,255,0.96);
+  box-shadow:0 14px 26px -16px rgba(15,23,42,0.48);
+  border-color:rgba(37,99,235,0.18);
+}
+
+.logo{font-weight:600;font-size:20px}
+.logo span{color:var(--primary)}
+
+.nav-links{display:flex;gap:20px;align-items:center}
+.nav-links a{
+  text-decoration:none;
+  color:var(--muted);
+  font-size:15px;
+  padding:8px 14px;
+  border-radius:8px;
+  transition:background 0.2s,color 0.2s,transform 0.2s;
+}
+.nav-links a:hover{
+  color:var(--primary);
+  background:rgba(37,99,235,0.08);
+  transform:translateY(-1px);
+}
+
+/* HEADER */
+.header{
+  max-width:1100px;
+  margin:auto;
+  padding:100px 10px 10px;
+}
+
+/* MAIN */
+main{
+  max-width:1100px;
+  margin:auto;
+  padding:10px 20px 20px;
+}
+
+/* TOP 2 COLUMNS */
+.top-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px; /* tighter gap */
+  margin-bottom:32px;
+}
+
+/* VIDEO 16:9 */
+.video-box{
+  width:100%;
+  aspect-ratio:16/9;
+}
+
+.video-box iframe,
+.video-placeholder{
+  width:100%;
+  aspect-ratio:16/9;
+  border:0;
+}
+
+video{
+  width:100%;
+  height:100%;
+  border-radius:10px;
+  object-fit:cover;
+}
+
+.video-box iframe{
+  width:100%;
+  height:100%;
+  display:block;
+  border-radius:10px;
+}
+
+/* TEXT */
+.text-block h3{
+  margin-bottom:4px;
+}
+
+.text-block p{
+  font-size:14px;
+  color:var(--muted);
+  margin-bottom:10px;
+  line-height:1.5;
+}
+
+/* BLENDER */
+.blender{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-top:8px;
+}
+
+.blender img{
+  width:20px;
+  height:20px;
+}
+
+/* CALCULATOR */
+.calc-section{
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:#fff;
+  padding:14px;
+}
+
+.calc-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-top:12px;
+  align-items:start;
+}
+
+.calc-panel{
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:14px;
+  background:#fafafa;
+}
+
+.calc-panel h3{
+  margin-bottom:8px;
+}
+
+input{
+  width:100%;
+  padding:9px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  margin-top:0;
+}
+
+/* PLANETS */
+.planets{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(110px,1fr));
+  gap:6px;
+  margin-top:0;
+}
+
+.planet{
+  border:1px solid var(--border);
+  padding:7px;
+  border-radius:8px;
+  font-size:12px;
+  text-align:center;
+}
+
+/* CARDS */
+.cards{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+  margin-top:16px;
+}
+
+.card{
+  border:1px solid var(--border);
+  border-radius:12px;
+  overflow:hidden;
+  background:#fff;
+}
+
+.card iframe,
+.card video{
+  width:100%;
+  aspect-ratio:16/9;
+  height:auto;
+  display:block;
+  border:0;
+}
+
+.card-content{
+  padding:10px;
+}
+
+.card h3{font-size:15px;margin-bottom:3px}
+.card p{font-size:12px;color:var(--muted)}
+
+.card.sun{
+  border-color:rgba(245,158,11,0.35);
+}
+
+.card.sun h3{
+  color:#d97706;
+}
+
+.step-img{
+    width:min(480px, 100%); /* smaller */
+    aspect-ratio:16/9;
+    margin:10px auto 20px;
+    border-radius:10px;
+    overflow:hidden;
+    border:1px solid var(--border);
+    background:#000;
+  }
+
+  .step-img img{
+    width:100%;
+    height:100%;
+    object-fit:contain; /* or contain if you don’t want crop */
+    background: #000;
+  }
+
+  .step-img span{
+    display:block;
+    display:block;
+    text-align:center;
+    font-size:12px;
+    color:var(--muted);
+    padding:6px 8px;
+  }
+
+/* FOOTER */
+.footer{
+  text-align:center;
+  padding:16px;
+  font-size:12px;
+  color:var(--muted);
+}
+
+/* MOBILE */
+@media(max-width:900px){
+  .top-grid{
+    grid-template-columns:1fr;
+  }
+
+  .calc-grid{
+    grid-template-columns:1fr;
+  }
+
+  .cards{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+
+@media(max-width:600px){
+  .cards{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="navbar">
+  <div class="logo">Multimedia <span>&</span> Authoring</div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="solar-system.html">Solar System</a>
+    <a href="rotoscope.html">Rotoscope</a>
+    <a href="about.html">About</a>
+  </div>
+</div>
+
+<div class="header">
+  <h1>Rotoscope: Live Action</h1>
+  <p>Frame-by-frame animation based on reference footage</p>
+</div>
+
+<main>
+
+<div class="top-grid">
+
+  <div class="video-box">
+    <iframe src="https://www.youtube.com/embed/-OnJe-fhQsE" allowfullscreen></iframe>
+  </div>
+
+  <div class="video-box">
+    <iframe src="https://www.youtube.com/embed/PqQxTjK0mu0" allowfullscreen></iframe>
+  </div>
+
+  <p style="margin-top:-10px; margin-bottom:18px; color:var(--muted); font-size:14px; line-height:1.5; font-style:italic;">
+  <span>Credits to original owner of video. For educational purposes only.</span>
+  </p>
+</div>
+
+<div class="blender">
+  <p><b>Tools used: </b></p>
+  <img alt="Adobe After Effects" src="https://upload.wikimedia.org/wikipedia/commons/c/cb/Adobe_After_Effects_CC_icon.svg">
+  <span>Adobe After Effects</span>
+  <img alt="CapCut" src="https://www.pngmart.com/files/23/Capcut-Logo-PNG-Pic.png">
+  <span>CapCut</span>
+</div>
+
+<br><br><br>
+
+<section class="calc-section">
+
+  <h2>12 Weeks Progress Timeline</h2>
+
+  <div class="cards">
+
+    <div class="card">
+      <iframe src="https://www.youtube.com/embed/d_eWBw0okxw" title="Week 1 video" allowfullscreen></iframe>
+      <div class="card-content"><h3>Week 1</h3></div>
+    </div>
+
+    <div class="card">
+      <iframe src="https://www.youtube.com/embed/SgUZOpDwzbs" title="Week 2 video" allowfullscreen></iframe>
+      <div class="card-content"><h3>Week 2</h3></div>
+    </div>
+
+    <div class="card">
+      <iframe src="https://www.youtube.com/embed/llhwDYfLOxA" title="Week 3 video" allowfullscreen></iframe>
+      <div class="card-content"><h3>Week 3</h3></div>
+    </div>
+
+    <div class="card">
+      <iframe src="https://www.youtube.com/embed/rVrFiidCBVc" title="Week 4 video" allowfullscreen></iframe>
+      <div class="card-content"><h3>Week 4</h3></div>
+    </div>
+
+    <div class="card">
+      <iframe src="https://www.youtube.com/embed/T2A5I-noLDI" title="Week 5 video" allowfullscreen></iframe>
+      <div class="card-content"><h3>Week 5</h3></div>
+    </div>
+
+    <div class="card">
+      <iframe src="https://www.youtube.com/embed/iYmOjHnXJhk" title="Week 6 video" allowfullscreen></iframe>
+      <div class="card-content"><h3>Week 6</h3></div>
+    </div>
+
+    <div class="card">
+      <iframe src="https://www.youtube.com/embed/vdXRWRdUg2s" title="Week 7 video" allowfullscreen></iframe>
+      <div class="card-content"><h3>Week 7</h3></div>
+    </div>
+
+    <div class="card">
+      <iframe src="https://www.youtube.com/embed/v8aJbbbO6-I" title="Week 7 video" allowfullscreen></iframe>
+      <div class="card-content"><h3>Week 8</h3></div>
+    </div>
+
+    <div class="card">
+      <iframe src="https://www.youtube.com/embed/lNYIWbdnFQA" title="Week 7 video" allowfullscreen></iframe>
+      <div class="card-content"><h3>Week 9</h3></div>
+    </div>
+
+    <div class="card">
+      <iframe src="https://www.youtube.com/embed/wR2bwe_y2us" title="Week 7 video" allowfullscreen></iframe>
+      <div class="card-content"><h3>Week 10</h3></div>
+    </div>
+
+    <div class="card">
+      <iframe src="https://www.youtube.com/embed/QJf1WfH1w-o" title="Week 7 video" allowfullscreen></iframe>
+      <div class="card-content"><h3>Week 11</h3></div>
+    </div>
+
+    <div class="card">
+      <iframe src="https://www.youtube.com/embed/5my2LcWhgnw" title="Week 7 video" allowfullscreen></iframe>
+      <div class="card-content"><h3>Week 12</h3></div>
+    </div>
+
+  </div>
+
+</section>
+
+<br><br><br>
+
+<div class="text-block">
+
+  <h2>Procedure</h2>
+    <p>
+      <br><b>Step 1: Import & Duplicate</b><br>
+      1. Import your raw video into After Effects<br>
+      2. Drag it to the timeline<br>
+      3. Duplicate it 5 times (Ctrl+D)<br>
+      4. Rename each layer: hair, skin, shirt, pants, shoes<br>
+
+      <br><b>Step 2: Roto Brush Each Layer</b><br>
+      1. Double-click a layer to open in Layer panel<br>
+      2. Press Alt+W to activate Roto Brush<br>
+      3. Paint green strokes on that body part only<br>
+      4. Paint red strokes on everything else<br>
+      5. Press play ▶ to propagate all frames<br>
+      6. Click Freeze in Effect Controls when done<br>
+      7. Repeat for all 5 layers<br>
+
+      <br><b>Step 3: Apply Fill Colors</b><br>
+      1. Select a layer<br>
+      2. Go to Effect > Generate > Fill<br>
+      3. Repeat for all 5 layers<br>
+
+      <br><b>Step 4: Add Green Screen Background</b><br>
+      1. Go to Layer > New > Solid<br>
+      2. Pick green color<br>
+      3. Drag it to the bottom of the timeline<br>
+
+      <br><b>Step 5: Export</b><br>
+      1. Press Ctrl+M to open Render Queue<br>
+      2. Set format and output location<br>
+      3. Click Render <br>
+    </p>
+
+</div>
+
+<br><br><br>
+
+</main>
+
+<br><br><br>
+
+<footer class="footer">
+  FOR ACADEMIC PURPOSES ONLY<br>
+  © 2026 by Estanes, Charlie Jr. C.
+</footer>
+
+</body>
+</html>

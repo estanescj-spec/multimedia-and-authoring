@@ -1,0 +1,3760 @@
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+  <title>Solar System</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+  *{box-sizing:border-box;margin:0;padding:0}
+
+  :root{
+    --primary:#2563eb;
+    --text:#1a1a1a;
+    --muted:#6b7280;
+    --border:#e5e7eb;
+    --bg:#fafafa;
+  }
+
+  body{
+    font-family:'DM Sans',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+  }
+
+  .navbar{
+    position:fixed;
+    top:0;
+    width:100%;
+    height:68px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 60px;
+    background:rgba(255,255,255,0.92);
+    backdrop-filter:blur(12px);
+    border:1px solid rgba(37,99,235,0.12);
+    border-left:none;
+    border-right:none;
+    border-top:none;
+    box-shadow:0 12px 22px -14px rgba(15,23,42,0.42);
+    z-index:9999;
+    transition:background 0.3s,box-shadow 0.3s,border-color 0.3s;
+  }
+  .navbar.scrolled{
+    background:rgba(255,255,255,0.96);
+    box-shadow:0 14px 26px -16px rgba(15,23,42,0.48);
+    border-color:rgba(37,99,235,0.18);
+  }
+
+  .logo{font-weight:600;font-size:20px}
+  .logo span{color:var(--primary)}
+
+  .nav-links{display:flex;gap:20px;align-items:center}
+  .nav-links a{
+    text-decoration:none;
+    color:var(--muted);
+    font-size:15px;
+    padding:8px 14px;
+    border-radius:8px;
+    transition:background 0.2s,color 0.2s,transform 0.2s;
+  }
+  .nav-links a:hover{
+    color:var(--primary);
+    background:rgba(37,99,235,0.08);
+    transform:translateY(-1px);
+  }
+
+  .header{
+    max-width:1100px;
+    margin:auto;
+    padding:100px 10px 10px;
+  }
+
+  main{
+    max-width:1100px;
+    margin:auto;
+    padding:10px 20px 20px;
+  }
+
+  .top-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+    margin-bottom:32px;
+  }
+
+  .video-box{
+    width:100%;
+    aspect-ratio:16/9;
+  }
+
+  .video-box iframe{
+    width:100%;
+    height:100%;
+    display:block;
+    border-radius:10px;
+    border:0;
+  }
+
+  .text-block h3{
+    margin-bottom:4px;
+  }
+
+  .text-block p{
+    font-size:14px;
+    color:var(--muted);
+    margin-bottom:10px;
+    line-height:1.5;
+  }
+
+  .calc-section{
+    width: min(500px, 90%);
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+    text-align: center;
+  }
+
+  .calc-section h2{
+    margin-bottom: 8px;
+  }
+
+  .calc-text{
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .calc-section input{
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    margin-bottom: 12px;
+  }
+
+  .planet-list{
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+  }
+
+  .planet-item{
+    display:flex;
+    justify-content:space-between;
+    font-size:14px;
+    color:var(--muted);
+    padding:3px 0;
+    border-bottom:1px solid var(--border);
+    cursor:pointer;
+    transition:color 0.15s;
+  }
+
+  .planet-item:last-child{
+    border-bottom:none;
+  }
+
+  .planet-item:hover{
+    color:var(--primary);
+  }
+
+  .planet-item.active{
+    color:var(--primary);
+    font-weight:500;
+  }
+
+  .planet-item .age-val{
+    font-size:13px;
+  }
+
+  /* ── Planet Card (matches top-grid layout) ── */
+  .planet-section{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+    align-items:start;
+  }
+
+  .planet-video-box{
+    width:100%;
+    aspect-ratio:16/9;
+    position:relative;
+    border-radius:10px;
+    overflow:hidden;
+    background:#000;
+    cursor:pointer;
+  }
+
+  .planet-video-box img{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+  }
+
+  .planet-video-box iframe{
+    position:absolute;
+    top:0;left:0;
+    width:100%;height:100%;
+    border:0;
+  }
+
+  .planet-info{
+    display:flex;
+    flex-direction:column;
+    height:100%;
+  }
+
+  .planet-info h2{
+    margin-bottom:6px;
+  }
+
+  .planet-info .planet-age{
+    font-size:14px;
+    color:var(--primary);
+    margin-bottom:8px;
+  }
+
+  .planet-info p{
+    font-size:14px;
+    color:var(--muted);
+    line-height:1.5;
+    margin-bottom:8px;
+    white-space:pre-line;
+  }
+
+  .card-nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between; /* important */
+    margin-top:auto;
+  }
+
+  .card-nav button{
+    background:none;
+    border:none;
+    cursor:pointer;
+    font-size:16px;
+    color:var(--muted);
+    padding:0;
+    transition:color 0.15s;
+  }
+
+  .card-nav button:hover{
+    color:var(--primary);
+  }
+
+  .card-dots{
+    display:flex;
+    gap:4px;
+    flex-wrap:wrap;
+  }
+
+  .dot{
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:var(--border);
+    transition:background 0.2s;
+    cursor:pointer;
+  }
+
+  .dot.active{
+    background:var(--primary);
+  }
+
+  .card-dots-wrapper{
+    flex:1;
+    display:flex;
+    justify-content:center;
+  }
+
+  .step-img{
+    width:min(480px, 100%); /* smaller */
+    aspect-ratio:16/9;
+    margin:10px auto 20px;
+    border-radius:10px;
+    overflow:hidden;
+    border:1px solid var(--border);
+    background:#000;
+  }
+
+  .step-img img{
+    width:100%;
+    height:100%;
+    object-fit:contain; /* or contain if you don’t want crop */
+    background: #000;
+  }
+
+  .step-img span{
+    display:block;
+    display:block;
+    text-align:center;
+    font-size:12px;
+    color:var(--muted);
+    padding:6px 8px;
+  }
+
+  .script{
+    margin-top:14px;
+    padding:14px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    background:#fff;
+  }
+
+  pre{
+    margin-top:8px;
+    background:#f3f4f6;
+    padding:10px;
+    border-radius:8px;
+    font-size:13px;
+    white-space:pre-wrap;
+    word-break:break-all;
+  }
+
+  .footer{
+    text-align:center;
+    padding:16px;
+    font-size:12px;
+    color:var(--muted);
+  }
+
+  @media(max-width:900px){
+    .top-grid{grid-template-columns:1fr;}
+    .planet-section{grid-template-columns:1fr;}
+  }
+
+  .script-nav{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-bottom:20px;
+      justify-content:center;
+  }
+
+  .planet-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:15px;
+      padding-bottom:12px;
+  }
+
+  .planet-header h2{
+      margin:0;
+  }
+
+  .download-btn{
+    background:white;
+    color:var(--text);
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:8px 12px;
+    text-decoration:none;
+    font-size:14px;
+}
+
+.download-btn:hover{
+    background:#f6f8fa;
+}
+
+  .tab-btn{
+    background:white;
+    color:var(--text);
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:8px 12px;
+    cursor:pointer;
+    font-family:'DM Sans',sans-serif;
+    font-size:14px;
+    transition:.2s;
+}
+
+.tab-btn:hover{
+    background:#f6f8fa;
+}
+
+.tab-btn.active{
+    background:#f6f8fa;
+    border-color:#d1d5db;
+    font-weight:500;
+}
+
+.script-section{
+    margin-top:14px;
+}
+
+.script-content{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:20px;
+}
+
+.script-nav{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:15px;
+    padding-bottom:15px;
+    border-bottom:1px solid var(--border);
+}
+  </style>
+  </head>
+
+  <body>
+
+  <div class="navbar">
+    <div class="logo">Multimedia <span>&</span> Authoring</div>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="solar-system.html">Solar System</a>
+      <a href="rotoscope.html">Rotoscope</a>
+      <a href="about.html">About</a>
+    </div>
+  </div>
+
+  <div class="header">
+    <h1>Blender: Solar System</h1>
+    <p>3D planetary motion simulation using Blender</p>
+  </div>
+
+  <main>
+
+  <div class="top-grid">
+    <div class="video-box">
+      <iframe src="https://www.youtube.com/embed/D5LaKwsLDIo" allowfullscreen></iframe>
+    </div>
+
+    <div class="text-block">
+      <h2>Description</h2>
+      <p>
+        A 3D simulation of the solar system showing planetary orbits, motion timing,
+        and relative distances to visually explain how planets revolve around the sun.
+        Built using a Python script inside Blender with realistic NASA textures, atmospheric effects,
+        axial rotation, and a procedural star field background.
+        <br><br><br>
+        <b>Requirements:</b><br>
+        <i>- Blender</i><br>
+        <i>- Python</i><br>
+        <i>- FFmpeg</i><br>
+        <i>- Solar system textures</i>
+      </p>
+    </div>
+  </div>
+
+  <br><br><br>
+
+  <!-- Calculator -->
+  <div class="calc-section">
+    <h2>Earth Age Calculator</h2>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:10px;">Enter your Earth age to see how old you would be on other planets.</p>
+    <input type="number" id="age" oninput="calc()" placeholder="Enter Earth age" style="width:100%;padding:9px;border-radius:8px;border:1px solid var(--border);font-family:'DM Sans',sans-serif;font-size:14px;margin-bottom:10px;">
+    <div class="planet-list" id="planet-list"></div>
+  </div>
+
+  <br><br><br>
+
+  <!-- Planet cards — same layout as top video+description -->
+  <div class="planet-section">
+
+    <div class="planet-video-box" id="planet-video-box"></div>
+
+    <!-- RIGHT: planet info -->
+    <div class="planet-info">
+      <h2 id="planet-name"></h2>
+      <div class="planet-age" id="planet-age"></div>
+      <p id="planet-desc"></p>
+      <p id="planet-specs"></p>
+
+      <div class="card-nav">
+        <button onclick="move(-1)">&#8592;</button>
+
+        <div class="card-dots-wrapper">
+          <div class="card-dots" id="dots"></div>
+        </div>
+
+        <button onclick="move(1)">&#8594;</button>
+      </div>
+    </div>
+
+  </div>
+
+  <br><br><br>
+
+  <div class="text-block">
+    <h3>Method</h3>
+    <p>
+      <br><b>Step 1: Download Textures</b><br>
+      Go to <a href="https://www.solarsystemscope.com/textures/" target="_blank">solarsystemscope.com/textures</a> and download the files needed. Save them all in one folder (e.g. C:/Users/Charlie/Downloads/textures/).<br>
+    </p> <div class="step-img"> <img src="images/step1.png"> </div> <p>
+
+      <br><b>Step 2: Set Up Blender</b><br>
+      1. Open Blender<br>
+      2. Go to the <b>Scripting</b> tab at the top<br>
+      3. Click <b>New</b> to create a new script<br>
+      4. Paste the full Python script into the editor<br>
+      5. Update the texture folder path in the script to match where you saved your textures:<br>
+    </p>
+    <pre>TEX = "C:/Users/Charlie/Downloads/textures/"</pre>
+    <p> </p>
+
+    <p>
+      <br><b>Step 3: Run the Script</b><br>
+      1. Click the <b>Run Script</b> button (play icon) or press <b>Alt + P</b><br>
+      2. Wait for the script to finish — you will see <i>Done!</i> printed at the bottom<br>
+      3. The scene will now contain the planets, sun, moon, orbital rings, and a star field background<br>
+    </p> <div class="step-img"> <img src="images/step3.png"> </div> <p>
+
+      <br><b>Step 4: Check the Scene</b><br>
+      Before rendering, verify everything looks correct:<br>
+      1. Press <b>Numpad 0</b> to look through the camera<br>
+      2. Press <b>Space</b> to preview the animation in the viewport<br>
+      3. Make sure all planets are visible and moving<br>
+    </p> <div class="step-img"> <img src="images/step4.png"> </div> <p>
+
+      <br><b>Step 5: Render the Animation</b><br>
+      1. Go to <b>Render</b> in the top menu<br>
+      2. Click <b>Render Animation</b> or press <b>Ctrl + F12</b><br>
+      3. Blender will render each of the 250 frames one by one and save them as PNG files<br>
+      4. Wait for all frames to finish — this may take a while depending on your PC<br>
+    </p> <div class="step-img"> <img src="images/step5.png"> </div> <p>
+
+      <br><b>Step 6: Find Your Rendered Frames</b><br>
+      Since the output path was not changed before rendering, Blender saved the frames to its default temp folder. Open <b>File Explorer</b> and navigate to:
+    </p>
+    <pre>C:\tmp\</pre>
+    <p>
+      You should see files named <i>0001.png</i>, <i>0002.png</i>, and so on up to <i>0250.png</i>. If they are not there, check the exact save location inside Blender:<br>
+      1. Go to <b>Properties → Output tab</b> (printer icon on the right panel)<br>
+      2. Look at the <b>Output path field</b> — it shows exactly where frames were saved<br>
+    </p> <div class="step-img"> <img src="images/step6.png"> </div> <p>
+
+      <br><b>Step 7: Compile Frames into a Video with FFmpeg</b><br>
+      Once you have located your frames, open <b>Command Prompt</b> and run:<br>
+    </p>
+    <pre>ffmpeg -framerate 24 -i "C:/tmp/%04d.png" -c:v libx264 -pix_fmt yuv420p "C:/Users/Charlie/OneDrive/Desktop/solar_system.mp4"</pre>
+    <p> <div class="step-img"> <img src="images/step7.png"> </div> </p>
+  </div>
+
+  <br><br><br>
+
+  <section class="script-section">
+      <div class="script-content">
+        <h2>Scripts and Textures</h2><br>
+        <div class="script-nav" id="script-nav"></div>
+        <div class="planet-header">
+            <h2 id="scriptTitle"></h2>
+            <a id="downloadBtn" class="download-btn">
+                Download Planet Pack (ZIP)
+            </a>
+        </div>
+        <pre id="scriptCode"></pre>
+    </div>
+  </section>
+
+  </main>
+
+  <br><br><br>
+
+  <script>
+  const slidePlanets = [
+    {
+      name:"Sun", orbit:null,
+      video:"videos/sun.gif",
+      desc:"The Sun is the star at the centre of our solar system. It is an almost perfect sphere of super-hot gases whose gravity holds the solar system together. The energy produced by the Sun is essential for life on Earth and is a driving force behind the Earth's weather.",
+      specs:`<b>Age:</b> 4.6 Billion Years
+  <b>Type:</b> Yellow Dwarf (G2V)
+  <b>Diameter:</b> 1,392,684 km
+  <b>Mass:</b> 1.99 × 10^30 kg (333,060 Earths)
+  <b>Surface Temperature:</b> 5,500 °C`
+    },
+    {
+      name:"Mercury", orbit:0.24,
+      video:"videos/mercury.gif",
+      desc:"Mercury is the closest planet to the Sun and due to its proximity it is not easily seen except during twilight. For every two orbits of the Sun, Mercury completes three rotations about its axis.",
+      specs:`<b>Diameter:</b> 4,879 km
+  <b>Mass:</b> 3.29 × 10^23 kg (0.06 Earths)
+  <b>Moons:</b> None
+  <b>Orbit Period:</b> 88 days
+  <b>Surface Temperature:</b> -173 to 427°C`
+    },
+    {
+      name:"Venus", orbit:0.62,
+      video:"videos/venus.gif",
+      desc:"Venus is the second planet from the Sun and is sometimes referred to as the Earth's sister planet due to their similar size and mass. Venus is named after the Roman goddess of love and beauty.",
+      specs:`<b>Diameter:</b> 12,104 km
+  <b>Mass:</b> 4.87 × 10^24 kg (0.82 Earths)
+  <b>Moons:</b> None
+  <b>Orbit Period:</b> 225 days
+  <b>Surface Temperature:</b> 462 °C`
+    },
+    {
+      name:"Earth", orbit:1,
+      video:"videos/earth.gif",
+      desc:"Earth is the third planet from the Sun and is the largest of the terrestrial planets. It is the only known planet to support life, formed approximately 4.54 billion years ago.",
+      specs:`<b>Diameter:</b> 12,756 km
+  <b>Mass:</b> 5.97 × 10^24 kg
+  <b>Moons:</b> 1 (The Moon)
+  <b>Orbit Period:</b> 365.24 days
+  <b>Surface Temperature:</b> -88 to 58°C`
+    },
+    {
+      name:"Moon", orbit:0.0748,
+      video:"videos/moon.gif",
+      desc:"The Moon is Earth's only natural satellite and the fifth largest moon in the solar system. It has a significant effect on Earth's tides and axial tilt.",
+      specs:`<b>Diameter:</b> 3,475 km
+  <b>Mass:</b> 7.35 × 10^22 kg
+  <b>Orbits:</b> The Earth
+  <b>Orbit Period:</b> 27.3 days
+  <b>Surface Temperature:</b> -233 to 123 °C`
+    },
+    {
+      name:"Mars", orbit:1.88,
+      video:"videos/mars.gif",
+      desc:"Mars is the fourth planet from the Sun, often described as the Red Planet due to its reddish appearance. It is a terrestrial planet with a thin atmosphere composed primarily of carbon dioxide.",
+      specs:`<b>Diameter:</b> 6,792 km
+  <b>Mass:</b> 6.39 × 10^23 kg (0.11 Earths)
+  <b>Moons:</b> 2 (Phobos & Deimos)
+  <b>Orbit Period:</b> 687 days (1.9 years)
+  <b>Surface Temperature:</b> -87 to -5 °C`
+    },
+    {
+      name:"Jupiter", orbit:11.86,
+      video:"videos/jupiter.gif",
+      desc:"Jupiter is the largest planet in the solar system, two and a half times more massive than all other planets combined. It is made primarily of gases and is therefore known as a gas giant.",
+      specs:`<b>Diameter:</b> 142,984 km
+  <b>Mass:</b> 1.90 × 10^27 kg (318 Earths)
+  <b>Moons:</b> 95
+  <b>Orbit Period:</b> 4,333 days (11.9 years)
+  <b>Surface Temperature:</b> -108°C`
+    },
+    {
+      name:"Saturn", orbit:29.4,
+      video:"videos/saturn.gif",
+      desc:"Best known for its fabulous ring system, Saturn is the sixth planet from the Sun and the second largest in our solar system. Like Jupiter, it is a gas giant composed of hydrogen, helium and methane.",
+      specs:`<b>Diameter:</b> 120,536 km
+  <b>Mass:</b> 5.68 × 10^26 kg (95 Earths)
+  <b>Moons:</b> 274
+  <b>Orbit Period:</b> 10,756 days (29.5 years)
+  <b>Surface Temperature:</b> -139 °C`
+    },
+    {
+      name:"Uranus", orbit:84,
+      video:"videos/uranus.gif",
+      desc:"Uranus is the seventh planet from the Sun, tipped over on its side with an axial tilt of 98 degrees. It became the first planet discovered with the use of a telescope.",
+      specs:`<b>Diameter:</b> 51,118 km
+  <b>Mass:</b> 8.68 × 10^25 kg (15 Earths)
+  <b>Moons:</b> 27
+  <b>Orbit Period:</b> 30,687 days (84.0 years)
+  <b>Surface Temperature:</b> -197 °C`
+    },
+    {
+      name:"Neptune", orbit:165,
+      video:"videos/neptune.gif",
+      desc:"Neptune is the eighth and most distant planet in the solar system. This gas giant may have formed much closer to the Sun before migrating out to its current position.",
+      specs:`<b>Diameter:</b> 49,528 km
+  <b>Mass:</b> 1.02 × 10^26 kg (17 Earths)
+  <b>Moons:</b> 14 (Triton)
+  <b>Orbit Period:</b> 60,190 days (164.8 years)
+  <b>Surface Temperature:</b> -201 °C`
+    },
+    {
+      name:"Pluto", orbit:248,
+      video:"videos/pluto.gif",
+      desc:"Discovered in 1930, Pluto is the second closest dwarf planet to the Sun and was once classified as the ninth planet. It is the largest dwarf planet but only the second most massive.",
+      specs:`<b>Diameter:</b> 2,372 km
+  <b>Mass:</b> 1.31 × 10^22 kg
+  <b>Orbit Period:</b> 248.0 years
+  <b>Surface Temperature:</b> -229°C
+  <b>Moons:</b> 5 (Charon)`
+    }
+  ];
+
+  const calcPlanets = slidePlanets.filter(p => p.name !== "Sun" && p.name !== "Moon");
+
+  let current = 0;
+  let earthAge = 0;
+
+  function renderCard() {
+    const p = slidePlanets[current];
+
+    const box = document.getElementById('planet-video-box');
+
+    box.innerHTML = `
+      <img src="${p.video}" alt="${p.name}">
+    `;
+
+    document.getElementById('planet-name').textContent = p.name;
+
+    const ageEl = document.getElementById('planet-age');
+    if (earthAge && p.orbit) {
+      ageEl.textContent = `Your age on ${p.name}: ${(earthAge / p.orbit).toFixed(2)} years`;
+      ageEl.style.display = 'block';
+    } else {
+      ageEl.style.display = 'none';
+    }
+
+    document.getElementById('planet-desc').textContent = p.desc;
+    document.getElementById('planet-specs').innerHTML = p.specs;
+  }
+
+  function buildDots() {
+    document.getElementById('dots').innerHTML = slidePlanets.map((_, i) =>
+      `<div class="dot${i === current ? ' active' : ''}" onclick="goTo(${i})"></div>`
+    ).join('');
+  }
+
+  function buildList() {
+    document.getElementById('planet-list').innerHTML = calcPlanets.map(p => {
+      const slideIdx = slidePlanets.findIndex(s => s.name === p.name);
+      const ageStr = (earthAge && p.orbit)
+        ? `<span class="age-val">${(earthAge / p.orbit).toFixed(2)} yrs</span>`
+        : '';
+      return `<div class="planet-item${slideIdx === current ? ' active' : ''}" onclick="goTo(${slideIdx})">
+        <span>${p.name}</span>${ageStr}
+      </div>`;
+    }).join('');
+  }
+
+  function goTo(i) {
+    current = i;
+    renderCard();
+    buildDots();
+    buildList();
+  }
+
+  function move(dir) {
+    current = (current + dir + slidePlanets.length) % slidePlanets.length;
+    renderCard();
+    buildDots();
+    buildList();
+  }
+
+  function calc() {
+    earthAge = parseFloat(document.getElementById('age').value) || 0;
+    renderCard();
+    buildList();
+  }
+
+  renderCard();
+  buildDots();
+  buildList();
+
+  const scripts = [
+{
+    name:"Solar System",
+    script:`import bpy, math, os, random
+
+TEX    = "C:/Users/Charlie/Downloads/textures/"
+FRAMES = 1440
+
+# ── Clear scene ───────────────────────────────────────────────────────────────
+bpy.ops.object.select_all(action='SELECT')
+bpy.ops.object.delete(use_global=False)
+
+for blk in (bpy.data.meshes, bpy.data.materials,
+            bpy.data.images, bpy.data.actions):
+    for item in list(blk):
+        try:
+            blk.remove(item)
+        except:
+            pass
+
+
+def try_load(fp):
+    return bpy.data.images.load(fp) if os.path.isfile(fp) else None
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# MATERIALS
+# ═════════════════════════════════════════════════════════════════════════════
+
+def make_emission_tex_mat(name, img_file, fallback_color, strength=1.8):
+    mat = bpy.data.materials.new(name)
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+
+    out   = nodes.new("ShaderNodeOutputMaterial")
+    emit  = nodes.new("ShaderNodeEmission")
+    tex   = nodes.new("ShaderNodeTexImage")
+    uv    = nodes.new("ShaderNodeTexCoord")
+
+    img = try_load(TEX + img_file)
+    if img:
+        tex.image = img
+        links.new(uv.outputs["UV"],     tex.inputs["Vector"])
+        links.new(tex.outputs["Color"], emit.inputs["Color"])
+    else:
+        emit.inputs["Color"].default_value = (*fallback_color, 1)
+
+    emit.inputs["Strength"].default_value = strength
+    links.new(emit.outputs["Emission"], out.inputs["Surface"])
+    return mat
+
+
+def make_sun_mat():
+    mat = bpy.data.materials.new("SunMat")
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+    out  = nodes.new("ShaderNodeOutputMaterial")
+    emit = nodes.new("ShaderNodeEmission")
+    tex  = nodes.new("ShaderNodeTexImage")
+    uv   = nodes.new("ShaderNodeTexCoord")
+    img  = try_load(TEX + "sun.jpg")
+    if img:
+        tex.image = img
+        links.new(uv.outputs["UV"],    tex.inputs["Vector"])
+        links.new(tex.outputs["Color"], emit.inputs["Color"])
+    else:
+        emit.inputs["Color"].default_value = (1.0, 0.65, 0.1, 1)
+    emit.inputs["Strength"].default_value = 5.0
+    links.new(emit.outputs["Emission"], out.inputs["Surface"])
+    return mat
+
+
+def make_cloud_mat():
+    mat = bpy.data.materials.new("CloudMat")
+    mat.use_nodes = True
+    mat.blend_method = 'BLEND'
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+    out   = nodes.new("ShaderNodeOutputMaterial")
+    emit  = nodes.new("ShaderNodeEmission")
+    trans = nodes.new("ShaderNodeBsdfTransparent")
+    mix   = nodes.new("ShaderNodeMixShader")
+    tex   = nodes.new("ShaderNodeTexImage")
+    uv    = nodes.new("ShaderNodeTexCoord")
+    img   = try_load(TEX + "earth_clouds.jpg")
+    if img:
+        tex.image = img
+        links.new(uv.outputs["UV"],     tex.inputs["Vector"])
+        links.new(tex.outputs["Color"], emit.inputs["Color"])
+        links.new(tex.outputs["Color"], mix.inputs["Fac"])
+    else:
+        emit.inputs["Color"].default_value = (1, 1, 1, 1)
+        mix.inputs["Fac"].default_value = 0.4
+    emit.inputs["Strength"].default_value = 1.5
+    links.new(trans.outputs["BSDF"],       mix.inputs[1])
+    links.new(emit.outputs["Emission"],    mix.inputs[2])
+    links.new(mix.outputs["Shader"],       out.inputs["Surface"])
+    return mat
+
+
+def make_ring_mat():
+    mat = bpy.data.materials.new("RingMat")
+    mat.use_nodes = True
+    mat.blend_method = 'BLEND'
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+    out  = nodes.new("ShaderNodeOutputMaterial")
+    emit = nodes.new("ShaderNodeEmission")
+    tex  = nodes.new("ShaderNodeTexImage")
+    uv   = nodes.new("ShaderNodeTexCoord")
+    img  = try_load(TEX + "2k_saturn_ring_alpha.png")
+    if img:
+        tex.image = img
+        links.new(uv.outputs["UV"],    tex.inputs["Vector"])
+        links.new(tex.outputs["Color"], emit.inputs["Color"])
+    else:
+        emit.inputs["Color"].default_value = (0.80, 0.72, 0.55, 1)
+    emit.inputs["Strength"].default_value = 1.2
+    links.new(emit.outputs["Emission"], out.inputs["Surface"])
+    return mat
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# STAR FIELD
+# ═════════════════════════════════════════════════════════════════════════════
+
+def star_field():
+    world = bpy.context.scene.world
+    world.use_nodes = True
+    nodes = world.node_tree.nodes
+    links = world.node_tree.links
+    nodes.clear()
+    wout  = nodes.new("ShaderNodeOutputWorld")
+    bg    = nodes.new("ShaderNodeBackground")
+    noise = nodes.new("ShaderNodeTexNoise")
+    ramp  = nodes.new("ShaderNodeValToRGB")
+    tc    = nodes.new("ShaderNodeTexCoord")
+    noise.inputs["Scale"].default_value     = 400.0
+    noise.inputs["Detail"].default_value    = 4.0
+    noise.inputs["Roughness"].default_value = 0.6
+    cr = ramp.color_ramp
+    cr.interpolation = 'CONSTANT'
+    cr.elements[0].position = 0.0
+    cr.elements[0].color    = (0, 0, 0, 1)
+    star = cr.elements.new(0.97)
+    star.color = (1, 1, 1, 1)
+    bg.inputs["Strength"].default_value = 0.8
+    links.new(tc.outputs["Generated"],  noise.inputs["Vector"])
+    links.new(noise.outputs["Fac"],     ramp.inputs["Fac"])
+    links.new(ramp.outputs["Color"],    bg.inputs["Color"])
+    links.new(bg.outputs["Background"], wout.inputs["Surface"])
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# ANIMATION HELPERS
+# ═════════════════════════════════════════════════════════════════════════════
+
+def spin(obj, rotations):
+    obj.rotation_euler[2] = 0
+    obj.keyframe_insert(data_path="rotation_euler", frame=1)
+    obj.rotation_euler[2] = math.radians(360 * rotations)
+    obj.keyframe_insert(data_path="rotation_euler", frame=FRAMES)
+
+
+def orbit(obj, radius, speed, phase=0.0, z=0.0):
+    for f in range(1, FRAMES + 1):
+        angle = math.radians(speed * f) + phase
+        obj.location.x = math.cos(angle) * radius
+        obj.location.y = math.sin(angle) * radius
+        obj.location.z = z
+        obj.keyframe_insert(data_path="location", frame=f)
+
+
+def earth_pos_at_frame(f, r):
+    """Returns Earth's world (x, y) at frame f using the same formula as orbit()."""
+    angle = math.radians(SPD["earth"] * f)
+    return (math.cos(angle) * r, math.sin(angle) * r)
+
+
+def make_orbit_ring(radius):
+    bpy.ops.curve.primitive_bezier_circle_add(radius=radius, location=(0, 0, 0))
+    ring = bpy.context.active_object
+    ring.name = "OrbitRing_r" + str(radius)
+    ring.data.bevel_depth = 0.008
+    ring.data.bevel_resolution = 6
+
+    mat = bpy.data.materials.new("OrbitMat_" + str(radius))
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+    out = nodes.new("ShaderNodeOutputMaterial")
+    emit = nodes.new("ShaderNodeEmission")
+    emit.inputs["Color"].default_value = (0.30, 0.45, 0.70, 1)
+    emit.inputs["Strength"].default_value = 5
+    links.new(emit.outputs["Emission"], out.inputs["Surface"])
+    ring.data.materials.append(mat)
+    return ring
+
+
+def shade_smooth_safe(obj):
+    try:
+        for poly in obj.data.polygons:
+            poly.use_smooth = True
+    except Exception as e:
+        print(f"[warn] shade_smooth_safe failed on {obj.name}: {e}")
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# SCENE LAYOUT
+# ═════════════════════════════════════════════════════════════════════════════
+
+ORB = dict(mercury=5,  venus=9,  earth=13, mars=18,
+           jupiter=26, saturn=37, uranus=48, neptune=59, pluto=70)
+
+SPD = dict(
+    mercury=8.0, venus=5.5, earth=4.0, mars=2.8,
+    jupiter=1.5, saturn=0.9, uranus=0.65, neptune=0.57, pluto=0.50
+)
+
+SZ  = dict(sun=3.2,
+           mercury=0.60, venus=0.90, earth=0.95, mars=0.72,
+           jupiter=2.00, saturn=1.75, uranus=1.35, neptune=1.30, pluto=0.48)
+
+scene = bpy.context.scene
+scene.frame_start = 1
+scene.frame_end   = FRAMES
+
+
+# ── SUN ───────────────────────────────────────────────────────────────────────
+bpy.ops.mesh.primitive_uv_sphere_add(
+    radius=SZ["sun"], segments=128, ring_count=64, location=(0, 0, 0))
+sun_obj = bpy.context.active_object
+sun_obj.name = "Sun"
+bpy.ops.object.shade_smooth()
+sun_obj.data.materials.append(make_sun_mat())
+spin(sun_obj, 1.5)
+
+bpy.ops.object.light_add(type='POINT', location=(0, 0, 0))
+sl = bpy.context.active_object
+sl.name = "SunGlow"
+sl.data.energy           = 5000
+sl.data.color            = (1.0, 0.85, 0.5)
+sl.data.shadow_soft_size = 3.0
+
+
+# ── MERCURY ───────────────────────────────────────────────────────────────────
+r = ORB["mercury"]
+make_orbit_ring(r)
+bpy.ops.mesh.primitive_uv_sphere_add(
+    radius=SZ["mercury"], segments=64, ring_count=32, location=(r, 0, 0))
+mercury = bpy.context.active_object
+mercury.name = "Mercury"
+bpy.ops.object.shade_smooth()
+mercury.data.materials.append(
+    make_emission_tex_mat("MercuryMat", "mercury.jpg", (0.55, 0.50, 0.47), 1.8))
+spin(mercury, 3)
+orbit(mercury, r, SPD["mercury"], phase=0.0)
+
+
+# ── VENUS ─────────────────────────────────────────────────────────────────────
+r = ORB["venus"]
+make_orbit_ring(r)
+bpy.ops.mesh.primitive_uv_sphere_add(
+    radius=SZ["venus"], segments=64, ring_count=32, location=(r, 0, 0))
+venus = bpy.context.active_object
+venus.name = "Venus"
+venus.rotation_euler[1] = math.radians(177.4)
+bpy.ops.object.shade_smooth()
+venus.data.materials.append(
+    make_emission_tex_mat("VenusMat", "venus_surface.jpg", (0.80, 0.65, 0.30), 1.8))
+spin(venus, -0.5)
+orbit(venus, r, SPD["venus"], phase=1.0)
+
+
+# ── EARTH + CLOUDS + MOON ─────────────────────────────────────────────────────
+r = ORB["earth"]
+make_orbit_ring(r)
+
+bpy.ops.mesh.primitive_uv_sphere_add(
+    radius=SZ["earth"], segments=96, ring_count=48, location=(r, 0, 0))
+earth = bpy.context.active_object
+earth.name = "Earth"
+earth.rotation_euler[1] = math.radians(23.4)
+bpy.ops.object.shade_smooth()
+earth.data.materials.append(
+    make_emission_tex_mat("EarthMat", "earth_daymap.jpg", (0.20, 0.45, 0.75), 1.8))
+spin(earth, 10)
+orbit(earth, r, SPD["earth"])
+
+bpy.ops.mesh.primitive_uv_sphere_add(
+    radius=SZ["earth"] + 0.04, segments=64, ring_count=32, location=(r, 0, 0))
+clouds = bpy.context.active_object
+clouds.name = "EarthClouds"
+bpy.ops.object.shade_smooth()
+clouds.data.materials.append(make_cloud_mat())
+spin(clouds, 11.5)
+orbit(clouds, r, SPD["earth"], phase=2.0)
+
+MOON_D = 1.8
+bpy.ops.mesh.primitive_uv_sphere_add(
+    radius=0.28, segments=48, ring_count=24, location=(r + MOON_D, 0, 0))
+moon = bpy.context.active_object
+moon.name = "Moon"
+bpy.ops.object.shade_smooth()
+moon.data.materials.append(
+    make_emission_tex_mat("MoonMat", "moon.jpg", (0.70, 0.68, 0.65), 1.6))
+for f in range(1, FRAMES + 1):
+    ea = math.radians(SPD["earth"] * f)
+    ma = math.radians(3 * SPD["earth"] * f)
+    ex = math.cos(ea) * r
+    ey = math.sin(ea) * r
+    moon.location.x = ex + math.cos(ma) * MOON_D
+    moon.location.y = ey + math.sin(ma) * MOON_D
+    moon.location.z = 0.12
+    moon.keyframe_insert(data_path="location", frame=f)
+
+
+# ── MARS ──────────────────────────────────────────────────────────────────────
+r = ORB["mars"]
+make_orbit_ring(r)
+bpy.ops.mesh.primitive_uv_sphere_add(
+    radius=SZ["mars"], segments=64, ring_count=32, location=(r, 0, 0))
+mars = bpy.context.active_object
+mars.name = "Mars"
+mars.rotation_euler[1] = math.radians(25.2)
+bpy.ops.object.shade_smooth()
+mars.data.materials.append(
+    make_emission_tex_mat("MarsMat", "2k_mars.jpg", (0.72, 0.30, 0.15), 1.8))
+spin(mars, 9.7)
+orbit(mars, r, SPD["mars"], phase=3.0)
+
+
+# ── JUPITER ───────────────────────────────────────────────────────────────────
+r = ORB["jupiter"]
+make_orbit_ring(r)
+bpy.ops.mesh.primitive_uv_sphere_add(
+    radius=SZ["jupiter"], segments=96, ring_count=48, location=(r, 0, 0))
+jupiter = bpy.context.active_object
+jupiter.name = "Jupiter"
+jupiter.scale = (1.0, 1.0, 0.935)
+jupiter.rotation_euler[1] = math.radians(3.1)
+bpy.ops.object.shade_smooth()
+jupiter.data.materials.append(
+    make_emission_tex_mat("JupiterMat", "2k_jupiter.jpg", (0.78, 0.63, 0.48), 1.8))
+spin(jupiter, 22)
+orbit(jupiter, r, SPD["jupiter"], phase=4.0)
+
+
+# ── SATURN + RINGS ────────────────────────────────────────────────────────────
+r = ORB["saturn"]
+make_orbit_ring(r)
+
+bpy.ops.mesh.primitive_uv_sphere_add(
+    radius=SZ["saturn"], segments=96, ring_count=48, location=(r, 0, 0))
+saturn = bpy.context.active_object
+saturn.name = "Saturn"
+saturn.scale = (1.0, 1.0, 0.90)
+saturn.rotation_euler[0] = math.radians(26.7)
+bpy.ops.object.shade_smooth()
+saturn.data.materials.append(
+    make_emission_tex_mat("SaturnMat", "2k_saturn.jpg", (0.85, 0.78, 0.55), 1.8))
+spin(saturn, 20)
+orbit(saturn, r, SPD["saturn"], phase=5.0)
+
+bpy.ops.mesh.primitive_circle_add(
+    radius=SZ["saturn"] * 2.5, vertices=256, fill_type='NGON', location=(0, 0, 0))
+s_rings = bpy.context.active_object
+s_rings.name = "SaturnRings"
+bpy.ops.object.shade_smooth()
+s_rings.data.materials.append(make_ring_mat())
+s_rings.parent = saturn
+s_rings.location = (0, 0, 0)
+s_rings.rotation_euler[0] = math.radians(26.7)
+
+
+# ── URANUS ────────────────────────────────────────────────────────────────────
+r = ORB["uranus"]
+make_orbit_ring(r)
+bpy.ops.mesh.primitive_uv_sphere_add(
+    radius=SZ["uranus"], segments=64, ring_count=32, location=(r, 0, 0))
+uranus = bpy.context.active_object
+uranus.name = "Uranus"
+uranus.rotation_euler[0] = math.radians(97.8)
+bpy.ops.object.shade_smooth()
+uranus.data.materials.append(
+    make_emission_tex_mat("UranusMat", "2k_uranus.jpg", (0.62, 0.90, 0.92), 1.8))
+spin(uranus, -14)
+orbit(uranus, r, SPD["uranus"])
+
+
+# ── NEPTUNE ───────────────────────────────────────────────────────────────────
+r = ORB["neptune"]
+make_orbit_ring(r)
+bpy.ops.mesh.primitive_uv_sphere_add(
+    radius=SZ["neptune"], segments=64, ring_count=32, location=(r, 0, 0))
+neptune = bpy.context.active_object
+neptune.name = "Neptune"
+bpy.ops.object.shade_smooth()
+neptune.data.materials.append(
+    make_emission_tex_mat("NeptuneMat", "2k_neptune.jpg", (0.15, 0.35, 0.75), 1.8))
+spin(neptune, 16)
+orbit(neptune, r, SPD["neptune"])
+
+
+# ── PLUTO + CHARON ────────────────────────────────────────────────────────────
+r = ORB["pluto"]
+make_orbit_ring(r)
+bpy.ops.mesh.primitive_uv_sphere_add(
+    radius=SZ["pluto"], segments=48, ring_count=24, location=(r, 0, 0))
+pluto = bpy.context.active_object
+pluto.name = "Pluto"
+bpy.ops.object.shade_smooth()
+pluto.data.materials.append(
+    make_emission_tex_mat("PlutoMat", "2k_pluto.jpg", (0.40, 0.35, 0.30), 1.8))
+spin(pluto, 1.5)
+orbit(pluto, r, SPD["pluto"])
+
+CHARON_D = SZ["pluto"] + 0.35
+bpy.ops.mesh.primitive_uv_sphere_add(
+    radius=0.20, segments=32, ring_count=16, location=(r + CHARON_D, 0, 0))
+charon = bpy.context.active_object
+charon.name = "Charon"
+bpy.ops.object.shade_smooth()
+chm  = bpy.data.materials.new("CharonMat")
+chm.use_nodes = True
+chm.node_tree.nodes.clear()
+co   = chm.node_tree.nodes.new("ShaderNodeOutputMaterial")
+emit = chm.node_tree.nodes.new("ShaderNodeEmission")
+emit.inputs["Color"].default_value    = (0.55, 0.55, 0.58, 1)
+emit.inputs["Strength"].default_value = 1.5
+chm.node_tree.links.new(emit.outputs["Emission"], co.inputs["Surface"])
+charon.data.materials.append(chm)
+for f in range(1, FRAMES + 1):
+    pa = math.radians(SPD["pluto"] * f)
+    ca = math.radians(6 * SPD["pluto"] * f)
+    px = math.cos(pa) * ORB["pluto"]
+    py = math.sin(pa) * ORB["pluto"]
+    charon.location.x = px + math.cos(ca) * CHARON_D
+    charon.location.y = py + math.sin(ca) * CHARON_D
+    charon.location.z = 0.0
+    charon.keyframe_insert(data_path="location", frame=f)
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# ASTEROID BELT — denser, bigger, brighter
+# ═════════════════════════════════════════════════════════════════════════════
+
+def make_rock_mat(name, color=(0.45, 0.42, 0.38), strength=2.6):
+    mat = bpy.data.materials.new(name)
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+    out   = nodes.new("ShaderNodeOutputMaterial")
+    emit  = nodes.new("ShaderNodeEmission")
+    noise = nodes.new("ShaderNodeTexNoise")
+    ramp  = nodes.new("ShaderNodeValToRGB")
+    tc    = nodes.new("ShaderNodeTexCoord")
+    noise.inputs["Scale"].default_value  = 8.0
+    noise.inputs["Detail"].default_value = 6.0
+    cr = ramp.color_ramp
+    cr.elements[0].color = (color[0]*0.5, color[1]*0.5, color[2]*0.5, 1)
+    cr.elements[1].color = (color[0]*1.4, color[1]*1.4, color[2]*1.4, 1)
+    links.new(tc.outputs["Generated"], noise.inputs["Vector"])
+    links.new(noise.outputs["Fac"], ramp.inputs["Fac"])
+    links.new(ramp.outputs["Color"], emit.inputs["Color"])
+    emit.inputs["Strength"].default_value = strength
+    links.new(emit.outputs["Emission"], out.inputs["Surface"])
+    return mat
+
+
+def make_meteor(name, radius, location, rock_seed=0, jaggedness=0.35):
+    """An irregular rock: icosphere + random displacement, with tumbling spin."""
+    try:
+        bpy.ops.mesh.primitive_ico_sphere_add(
+            radius=radius, subdivisions=3, location=location)
+        rock = bpy.context.active_object
+        rock.name = name
+
+        try:
+            mod = rock.modifiers.new("Displace", type='DISPLACE')
+            tex = bpy.data.textures.new(name + "_disp", type='DISTORTED_NOISE')
+            tex.noise_scale = 0.6
+            tex.distortion  = 1.5
+            mod.texture  = tex
+            mod.strength = jaggedness * radius
+        except Exception as e:
+            print(f"[warn] displace skipped on {name}: {e}")
+
+        shade_smooth_safe(rock)
+        rock.data.materials.append(make_rock_mat(name + "Mat"))
+
+        random.seed(rock_seed)
+        rock.rotation_euler = (
+            random.uniform(0, math.pi),
+            random.uniform(0, math.pi),
+            random.uniform(0, math.pi),
+        )
+        rock.keyframe_insert(data_path="rotation_euler", frame=1)
+        rx, ry, rz = rock.rotation_euler
+        rock.rotation_euler = (
+            rx + math.radians(360 * random.uniform(2, 6)),
+            ry + math.radians(360 * random.uniform(2, 6)),
+            rz + math.radians(360 * random.uniform(2, 6)),
+        )
+        rock.keyframe_insert(data_path="rotation_euler", frame=FRAMES)
+
+        try:
+            if rock.animation_data and rock.animation_data.action:
+                for fc in rock.animation_data.action.fcurves:
+                    for kp in fc.keyframe_points:
+                        kp.interpolation = 'LINEAR'
+        except Exception as e:
+            print(f"[warn] interpolation set skipped on {name}: {e}")
+
+        return rock
+    except Exception as e:
+        print(f"[error] make_meteor failed for {name}: {e}")
+        return None
+
+
+def orbit_belt(obj, radius_min, radius_max, speed, phase=0.0, z_jitter=0.0, seed=0):
+    if obj is None:
+        return
+    random.seed(seed)
+    radius = random.uniform(radius_min, radius_max)
+    z = random.uniform(-z_jitter, z_jitter)
+    for f in range(1, FRAMES + 1):
+        angle = math.radians(speed * f) + phase
+        obj.location.x = math.cos(angle) * radius
+        obj.location.y = math.sin(angle) * radius
+        obj.location.z = z
+        obj.keyframe_insert(data_path="location", frame=f)
+
+
+BELT_R_MIN = ORB["mars"] + 2.0
+BELT_R_MAX = ORB["jupiter"] - 2.0
+N_METEORS  = 140   # denser swarm
+
+for i in range(N_METEORS):
+    random.seed(i * 17)
+    rad  = random.uniform(0.05, 0.16)   # small rocks, belt density does the work
+    ang  = random.uniform(0, 2 * math.pi)
+    dist = random.uniform(BELT_R_MIN, BELT_R_MAX)
+    loc  = (math.cos(ang) * dist, math.sin(ang) * dist, random.uniform(-0.5, 0.5))
+    rock = make_meteor(f"Meteor_{i:03d}", rad, loc, rock_seed=i)
+    orbit_belt(rock, BELT_R_MIN, BELT_R_MAX,
+               speed=random.uniform(0.8, 1.6),
+               phase=ang, z_jitter=0.5, seed=i * 31)
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# STRAIGHT-LINE FLIGHT HELPER
+# ═════════════════════════════════════════════════════════════════════════════
+def fly_straight(obj, start, end, auto_rotate=True, frame_start=1, frame_end=FRAMES):
+    if obj is None:
+        return
+    import mathutils
+
+    if auto_rotate:
+        start_vec = mathutils.Vector(start)
+        end_vec = mathutils.Vector(end)
+        direction = end_vec - start_vec
+        rotation_matrix = direction.to_track_quat('Z', 'Y').to_matrix().to_4x4()
+        obj.matrix_world = mathutils.Matrix.Translation(start_vec) @ rotation_matrix
+        obj.keyframe_insert(data_path="rotation_euler", frame=frame_start)
+
+    span = max(frame_end - frame_start, 1)
+    for f in range(frame_start, frame_end + 1):
+        t = (f - frame_start) / span
+        obj.location.x = start[0] + (end[0] - start[0]) * t
+        obj.location.y = start[1] + (end[1] - start[1]) * t
+        obj.location.z = start[2] + (end[2] - start[2]) * t
+        obj.keyframe_insert(data_path="location", frame=f)
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# SHUTTLE — launches from Earth, out into the system
+# ═════════════════════════════════════════════════════════════════════════════
+def make_metal_mat(name, color=(0.65, 0.66, 0.68), strength=1.6):
+    mat = bpy.data.materials.new(name)
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+    out  = nodes.new("ShaderNodeOutputMaterial")
+    emit = nodes.new("ShaderNodeEmission")
+    emit.inputs["Color"].default_value = (*color, 1)
+    emit.inputs["Strength"].default_value = strength
+    links.new(emit.outputs["Emission"], out.inputs["Surface"])
+    return mat
+
+shuttle_mat = make_metal_mat("Shuttle_Mat", (0.85, 0.85, 0.88), 1.8)
+wing_mat = make_metal_mat("Shuttle_WingMat", (0.15, 0.15, 0.15), 1.4)
+
+length = SZ["earth"] * 3
+radius = SZ["earth"] * 0.4
+
+bpy.ops.mesh.primitive_cylinder_add(radius=radius, depth=length, vertices=32, location=(0,0,0))
+shuttle = bpy.context.active_object
+shuttle.name = "Shuttle_Body"
+shuttle.data.materials.append(shuttle_mat)
+shade_smooth_safe(shuttle)
+
+bpy.ops.mesh.primitive_cone_add(radius1=radius, radius2=0.0, depth=length*0.4, location=(0, 0, length/2 + (length*0.2)))
+nose = bpy.context.active_object
+nose.name = "Shuttle_Nose"
+nose.data.materials.append(shuttle_mat)
+shade_smooth_safe(nose)
+nose.parent = shuttle
+
+bpy.ops.mesh.primitive_cone_add(radius1=radius * 3.5, radius2=radius * 0.8, depth=length * 0.5, location=(0, 0, -length * 0.15))
+wings = bpy.context.active_object
+wings.name = "Shuttle_Wings"
+wings.scale = (1.0, 0.08, 1.0)
+wings.data.materials.append(wing_mat)
+shade_smooth_safe(wings)
+wings.parent = shuttle
+
+bpy.ops.mesh.primitive_cube_add(size=1.0, location=(0, 0, -length * 0.3))
+tail = bpy.context.active_object
+tail.name = "Shuttle_Tail"
+tail.scale = (0.05, radius * 1.2, length * 0.25)
+tail.location.y = radius * 1.1
+tail.rotation_euler[0] = math.radians(-25)
+tail.data.materials.append(shuttle_mat)
+shade_smooth_safe(tail)
+tail.parent = shuttle
+
+shuttle.scale = (0.6, 0.45, 0.45)
+shuttle.rotation_euler[0] = 0.0
+shuttle.rotation_euler[1] = math.radians(90)
+shuttle.rotation_euler[2] = math.radians(30)
+
+# Launch from Earth's position at frame 1, out toward open space along the
+# same general bearing Earth is orbiting away from (just radially outward).
+earth_r = ORB["earth"]
+ex1, ey1 = earth_pos_at_frame(1, earth_r)
+launch_start = (ex1, ey1, 1.0)            # right at Earth
+launch_dir   = math.atan2(ey1, ex1)       # outward bearing from the Sun
+LAUNCH_DIST  = 70
+launch_end   = (ex1 + math.cos(launch_dir) * LAUNCH_DIST,
+                ey1 + math.sin(launch_dir) * LAUNCH_DIST,
+                25.0)
+
+shuttle.location = launch_start
+fly_straight(shuttle, start=launch_start, end=launch_end, auto_rotate=False)
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# WORLD / STARS
+# ═════════════════════════════════════════════════════════════════════════════
+star_field()
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# FALLING METEORS — comet-style nucleus + glowing tail, spawning one after
+# another (sequential, not simultaneous), each at 2x Comet-A's travel speed.
+# ═════════════════════════════════════════════════════════════════════════════
+
+def make_meteor_nucleus_mat(name, color=(0.75, 0.85, 0.95)):
+    mat = bpy.data.materials.new(name)
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+    out   = nodes.new("ShaderNodeOutputMaterial")
+    emit  = nodes.new("ShaderNodeEmission")
+    noise = nodes.new("ShaderNodeTexNoise")
+    ramp  = nodes.new("ShaderNodeValToRGB")
+    tc    = nodes.new("ShaderNodeTexCoord")
+    noise.inputs["Scale"].default_value = 6.0
+    cr = ramp.color_ramp
+    cr.elements[0].color = (color[0]*0.5, color[1]*0.5, color[2]*0.6, 1)
+    cr.elements[1].color = (color[0]*1.3, color[1]*1.3, color[2]*1.3, 1)
+    links.new(tc.outputs["Generated"], noise.inputs["Vector"])
+    links.new(noise.outputs["Fac"], ramp.inputs["Fac"])
+    links.new(ramp.outputs["Color"], emit.inputs["Color"])
+    emit.inputs["Strength"].default_value = 2.2
+    links.new(emit.outputs["Emission"], out.inputs["Surface"])
+    return mat
+
+
+def make_meteor_tail_mat(name, color=(0.65, 0.85, 1.0)):
+    """Thin, wispy, fast-fading semi-transparent tail — reads as a faint
+    streak of gas/dust rather than a solid wedge."""
+    mat = bpy.data.materials.new(name)
+    mat.use_nodes = True
+    mat.blend_method = 'BLEND'
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+    out   = nodes.new("ShaderNodeOutputMaterial")
+    emit  = nodes.new("ShaderNodeEmission")
+    trans = nodes.new("ShaderNodeBsdfTransparent")
+    mix   = nodes.new("ShaderNodeMixShader")
+    tc    = nodes.new("ShaderNodeTexCoord")
+    ramp  = nodes.new("ShaderNodeValToRGB")
+
+    cr = ramp.color_ramp
+    cr.elements[0].position = 0.0
+    cr.elements[0].color = (0, 0, 0, 1)   # faded far end
+    cr.elements[1].position = 0.55
+    cr.elements[1].color = (1, 1, 1, 1)   # bright only near the nucleus —
+                                           # most of the tail's length stays faint
+
+    emit.inputs["Color"].default_value = (*color, 1)
+    emit.inputs["Strength"].default_value = 3.0   # softer glow, less solid-looking
+
+    links.new(tc.outputs["Generated"], ramp.inputs["Fac"])
+    links.new(ramp.outputs["Color"], mix.inputs["Fac"])
+    links.new(trans.outputs["BSDF"], mix.inputs[1])
+    links.new(emit.outputs["Emission"], mix.inputs[2])
+    links.new(mix.outputs["Shader"], out.inputs["Surface"])
+    return mat
+
+
+def spawn_falling_meteor(name, start, end, nucleus_radius, frame_start, frame_end,
+                          fade_frames=20):
+    """Comet-style nucleus + tail, flying start→end. Fades in via glow strength
+    at the start, fades out the same way at the end, and is fully hidden
+    (scaled to zero) outside its own [frame_start, frame_end] window so
+    meteors never overlap visually."""
+    bpy.ops.mesh.primitive_ico_sphere_add(radius=nucleus_radius, subdivisions=3, location=(0, 0, 0))
+    nucleus = bpy.context.active_object
+    nucleus.name = name
+
+    mod = nucleus.modifiers.new("Displace", type='DISPLACE')
+    tex = bpy.data.textures.new(name + "_disp", type='DISTORTED_NOISE')
+    tex.noise_scale = 0.5
+    mod.texture = tex
+    mod.strength = 0.3 * nucleus_radius
+    shade_smooth_safe(nucleus)
+    nucleus_mat = make_meteor_nucleus_mat(name + "_NucleusMat")
+    nucleus.data.materials.append(nucleus_mat)
+
+    tail_len = nucleus_radius * 22                       # longer relative to core
+    bpy.ops.mesh.primitive_cone_add(radius1=nucleus_radius * 0.45,  # thin base —
+                                     radius2=0.0, depth=tail_len)   # not a wide wedge
+    tail = bpy.context.active_object
+    tail.name = name + "_Tail"
+    tail_mat = make_meteor_tail_mat(name + "_TailMat")
+    tail.data.materials.append(tail_mat)
+    shade_smooth_safe(tail)
+
+    tail.parent = nucleus
+    tail.location = (0, 0, -tail_len * 0.5)
+    tail.rotation_euler[0] = math.radians(180)  # tail trails behind direction of travel
+
+    # ── Fade in / fade out via emission strength on both materials ─────────
+    nucleus_emit = nucleus_mat.node_tree.nodes["Emission"]
+    tail_emit    = tail_mat.node_tree.nodes["Emission"]
+    nucleus_full = nucleus_emit.inputs["Strength"].default_value
+    tail_full    = tail_emit.inputs["Strength"].default_value
+
+    fade_in_end    = min(frame_end, frame_start + fade_frames)
+    fade_out_start = max(frame_start, frame_end - fade_frames)
+
+    for emit_node, full_strength in ((nucleus_emit, nucleus_full), (tail_emit, tail_full)):
+        emit_node.inputs["Strength"].default_value = 0.0
+        emit_node.inputs["Strength"].keyframe_insert(data_path="default_value", frame=frame_start)
+        emit_node.inputs["Strength"].default_value = full_strength
+        emit_node.inputs["Strength"].keyframe_insert(data_path="default_value", frame=fade_in_end)
+        emit_node.inputs["Strength"].keyframe_insert(data_path="default_value", frame=fade_out_start)
+        emit_node.inputs["Strength"].default_value = 0.0
+        emit_node.inputs["Strength"].keyframe_insert(data_path="default_value", frame=frame_end)
+
+    # Fully hide outside its active window (safety net so nothing lingers at 0 glow)
+    nucleus.scale = (0, 0, 0)
+    nucleus.keyframe_insert(data_path="scale", frame=max(1, frame_start - 1))
+    nucleus.scale = (1, 1, 1)
+    nucleus.keyframe_insert(data_path="scale", frame=frame_start)
+    nucleus.keyframe_insert(data_path="scale", frame=frame_end)
+    nucleus.scale = (0, 0, 0)
+    nucleus.keyframe_insert(data_path="scale", frame=min(FRAMES, frame_end + 1))
+
+    fly_straight(nucleus, start=start, end=end, auto_rotate=True,
+                 frame_start=frame_start, frame_end=frame_end)
+    return nucleus
+
+
+# Comet A's reference speed is no longer used for duration — each falling
+# meteor now lasts a fixed amount of time regardless of path length.
+SCENE_FPS = 24  # Blender's default; change this if your scene fps differs
+METEOR_DURATION_SECONDS = 6
+METEOR_DURATION_FRAMES  = METEOR_DURATION_SECONDS * SCENE_FPS   # 144 frames
+
+random.seed(11)
+N_FALLING_METEORS = 10
+GAP_FRAMES = 25   # small gap between one meteor finishing and the next starting
+
+current_frame = 1
+for i in range(N_FALLING_METEORS):
+    if current_frame + METEOR_DURATION_FRAMES > FRAMES:
+        print(f"[info] Only spawned {i} of {N_FALLING_METEORS} falling meteors "
+              f"— not enough frames left for a full 6s meteor.")
+        break
+
+    # Pick a short streak path (not a full scene crossing) so all meteors
+    # comfortably fit one-after-another inside the FRAMES timeline.
+    center_x = random.uniform(-70, 70)
+    center_y = random.uniform(-70, 70)
+    center_z = random.uniform(0, 40)
+    drop_x = random.uniform(-15, 15)
+    drop_y = random.uniform(-15, 15)
+    drop_z = random.uniform(-25, -15)
+
+    start_x, start_y, start_z = center_x, center_y, center_z
+    end_x, end_y, end_z = center_x + drop_x, center_y + drop_y, center_z + drop_z
+
+    frame_start = current_frame
+    frame_end   = frame_start + METEOR_DURATION_FRAMES
+
+    spawn_falling_meteor(f"FallingMeteor_{i:02d}",
+                          (start_x, start_y, start_z), (end_x, end_y, end_z),
+                          nucleus_radius=0.18,
+                          frame_start=frame_start, frame_end=frame_end,
+                          fade_frames=24)   # ~1 second fade in/out
+
+    current_frame = frame_end + GAP_FRAMES
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# EEVEE — bloom on so the Sun glows nicely
+# ═════════════════════════════════════════════════════════════════════════════
+scene.render.engine = 'BLENDER_EEVEE'
+eevee = scene.eevee
+
+if hasattr(eevee, "use_bloom"):
+    eevee.use_bloom       = True
+if hasattr(eevee, "bloom_intensity"):
+    eevee.bloom_intensity = 0.05
+if hasattr(eevee, "bloom_radius"):
+    eevee.bloom_radius    = 5.0
+if hasattr(eevee, "bloom_threshold"):
+    eevee.bloom_threshold = 0.9
+
+scene.render.resolution_x = 1920
+scene.render.resolution_y = 1080
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# CAMERA
+# ═════════════════════════════════════════════════════════════════════════════
+bpy.ops.object.camera_add(location=(0, -150, 95))
+cam = bpy.context.active_object
+cam.name = "SolarCam"
+cam.rotation_euler[0] = math.radians(55)
+cam.rotation_euler[1] = 0.0
+cam.rotation_euler[2] = 0.0
+cam.data.lens     = 28
+cam.data.clip_end = 1000
+bpy.context.scene.camera = cam
+
+print("✓ Solar System v5")
+print("  - Shuttle launches from Earth's position outward")
+print("  - Asteroid belt: denser (140 rocks), bigger, brighter emission")
+print("  Numpad-0 → F12 to render.")`,
+    zipFile:"downloads/solar-system.zip"
+},
+{
+    name:"Sun",
+    script:`import bpy, math, os
+
+TEX    = "C:/Users/Charlie/Downloads/textures/"
+FRAMES = 360
+
+
+# ── Clear scene ───────────────────────────────────────────────────────────────
+bpy.ops.object.select_all(action='SELECT')
+bpy.ops.object.delete(use_global=False)
+
+for blk in (bpy.data.meshes, bpy.data.materials,
+            bpy.data.images, bpy.data.actions):
+    for item in blk:
+        try:
+            blk.remove(item)
+        except:
+            pass
+
+
+def try_load(fp):
+    return bpy.data.images.load(fp) if os.path.isfile(fp) else None
+
+
+# ── Sun material (Eevee emission only) ────────────────────────────────────────
+def make_sun_mat():
+    mat = bpy.data.materials.new("SunMat")
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+
+    out  = nodes.new("ShaderNodeOutputMaterial")
+    emit = nodes.new("ShaderNodeEmission")
+    tex  = nodes.new("ShaderNodeTexImage")
+    uv   = nodes.new("ShaderNodeTexCoord")
+
+    img = try_load(TEX + "sun.jpg")
+
+    if img:
+        tex.image = img
+        links.new(uv.outputs["UV"], tex.inputs["Vector"])
+        links.new(tex.outputs["Color"], emit.inputs["Color"])
+    else:
+        emit.inputs["Color"].default_value = (1.0, 0.6, 0.1, 1)
+
+    emit.inputs["Strength"].default_value = 8.0
+
+    links.new(emit.outputs["Emission"], out.inputs["Surface"])
+    return mat
+
+
+# ── Star field (simple Eevee world) ───────────────────────────────────────────
+def star_field():
+    world = bpy.context.scene.world
+    world.use_nodes = True
+
+    nodes = world.node_tree.nodes
+    links = world.node_tree.links
+    nodes.clear()
+
+    wout  = nodes.new("ShaderNodeOutputWorld")
+    bg    = nodes.new("ShaderNodeBackground")
+    noise = nodes.new("ShaderNodeTexNoise")
+    ramp  = nodes.new("ShaderNodeValToRGB")
+    tc    = nodes.new("ShaderNodeTexCoord")
+
+    noise.inputs["Scale"].default_value = 400.0
+    noise.inputs["Detail"].default_value = 4.0
+    noise.inputs["Roughness"].default_value = 0.6
+
+    cr = ramp.color_ramp
+    cr.interpolation = 'CONSTANT'
+    cr.elements[0].position = 0.0
+    cr.elements[0].color = (0, 0, 0, 1)
+
+    star = cr.elements.new(0.97)
+    star.color = (1, 1, 1, 1)
+
+    bg.inputs["Strength"].default_value = 0.8
+
+    links.new(tc.outputs["Generated"], noise.inputs["Vector"])
+    links.new(noise.outputs["Fac"], ramp.inputs["Fac"])
+    links.new(ramp.outputs["Color"], bg.inputs["Color"])
+    links.new(bg.outputs["Background"], wout.inputs["Surface"])
+
+
+# ── Linear animation helper ───────────────────────────────────────────────────
+def linearize(obj):
+    ad = obj.animation_data
+    if not ad:
+        return
+
+    action = getattr(ad, "action", None)
+    if not action:
+        return
+
+    fcurves = getattr(action, "fcurves", None)
+    if not fcurves:
+        return
+
+    for fc in fcurves:
+        for kp in fc.keyframe_points:
+            kp.interpolation = 'LINEAR'
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# BUILD SCENE
+# ═════════════════════════════════════════════════════════════════════════════
+
+# Sun sphere
+bpy.ops.mesh.primitive_uv_sphere_add(
+    radius=2.2, segments=128, ring_count=64, location=(0, 0, 0))
+
+sun = bpy.context.active_object
+sun.name = "Sun"
+bpy.ops.object.shade_smooth()
+sun.data.materials.append(make_sun_mat())
+
+
+# ── Light (this actually lights scene in Eevee) ──────────────────────────────
+bpy.ops.object.light_add(type='POINT', location=(0, 0, 0))
+sl = bpy.context.active_object
+sl.name = "SunLight"
+sl.data.energy = 50000
+sl.data.shadow_soft_size = 2.0
+
+
+# ── Animation ─────────────────────────────────────────────────────────────────
+bpy.context.scene.frame_start = 1
+bpy.context.scene.frame_end = FRAMES
+
+sun.rotation_euler[2] = 0
+sun.keyframe_insert(data_path="rotation_euler", frame=1)
+
+sun.rotation_euler[2] = math.radians(540)
+sun.keyframe_insert(data_path="rotation_euler", frame=FRAMES)
+
+linearize(sun)
+
+
+# ── Star background ───────────────────────────────────────────────────────────
+star_field()
+
+
+# ── Camera ────────────────────────────────────────────────────────────────────
+bpy.ops.object.camera_add(location=(0, -36, 7.5))
+cam = bpy.context.active_object
+cam.rotation_euler = (math.radians(78), 0, 0)
+cam.data.lens = 85
+bpy.context.scene.camera = cam
+
+
+# ── EEVEE SETTINGS (NO COMPOSITOR) ────────────────────────────────────────────
+scene = bpy.context.scene
+scene.render.engine = 'BLENDER_EEVEE'
+
+# Eevee Bloom (Blender 5.1 correct API)
+eevee = scene.eevee
+
+if hasattr(eevee, "use_bloom"):
+    eevee.use_bloom = True
+
+if hasattr(eevee, "bloom_intensity"):
+    eevee.bloom_intensity = 0.08
+
+if hasattr(eevee, "bloom_radius"):
+    eevee.bloom_radius = 6.5
+
+if hasattr(eevee, "bloom_threshold"):
+    eevee.bloom_threshold = 0.8
+
+scene.render.resolution_x = 1920
+scene.render.resolution_y = 1080
+
+print("Eevee Sun scene ready (no corona, no compositor)!")`,
+    zipFile:"downloads/sun.zip"
+},
+{
+    name:"Mercury",
+    script:`import bpy, math, os
+
+TEX = "C:/Users/Charlie/Downloads/textures/"
+FRAMES = 360
+
+# ── Clear scene ───────────────────────────────────────────────────────────────
+bpy.ops.object.select_all(action='SELECT')
+bpy.ops.object.delete(use_global=False)
+
+for blk in (bpy.data.meshes, bpy.data.materials, bpy.data.images, bpy.data.actions):
+    for item in list(blk):
+        try:
+            blk.remove(item)
+        except:
+            pass
+
+
+def try_load(fp):
+    return bpy.data.images.load(fp) if os.path.isfile(fp) else None
+
+
+# ── Mercury material ──────────────────────────────────────────────────────────
+def make_mercury_mat():
+    mat = bpy.data.materials.new("MercuryMat")
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+
+    out = nodes.new("ShaderNodeOutputMaterial")
+    bsdf = nodes.new("ShaderNodeBsdfPrincipled")
+    tex = nodes.new("ShaderNodeTexImage")
+    uv = nodes.new("ShaderNodeTexCoord")
+
+    img = try_load(TEX + "mercury.jpg")
+
+    if img:
+        tex.image = img
+        links.new(uv.outputs["UV"], tex.inputs["Vector"])
+        links.new(tex.outputs["Color"], bsdf.inputs["Base Color"])
+    else:
+        bsdf.inputs["Base Color"].default_value = (0.55, 0.50, 0.47, 1)
+
+    bsdf.inputs["Roughness"].default_value = 0.92
+
+    links.new(bsdf.outputs["BSDF"], out.inputs["Surface"])
+    return mat
+
+
+# ── Star field ───────────────────────────────────────────────────────────────
+def star_field():
+    world = bpy.context.scene.world
+    world.use_nodes = True
+
+    nodes = world.node_tree.nodes
+    links = world.node_tree.links
+    nodes.clear()
+
+    wout = nodes.new("ShaderNodeOutputWorld")
+    bg = nodes.new("ShaderNodeBackground")
+    noise = nodes.new("ShaderNodeTexNoise")
+    ramp = nodes.new("ShaderNodeValToRGB")
+    tc = nodes.new("ShaderNodeTexCoord")
+
+    noise.inputs["Scale"].default_value = 400.0
+    noise.inputs["Detail"].default_value = 4.0
+    noise.inputs["Roughness"].default_value = 0.6
+
+    cr = ramp.color_ramp
+    cr.interpolation = 'CONSTANT'
+    cr.elements[0].position = 0.0
+    cr.elements[0].color = (0, 0, 0, 1)
+
+    star = cr.elements.new(0.97)
+    star.color = (1, 1, 1, 1)
+
+    bg.inputs["Strength"].default_value = 0.8
+
+    links.new(tc.outputs["Generated"], noise.inputs["Vector"])
+    links.new(noise.outputs["Fac"], ramp.inputs["Fac"])
+    links.new(ramp.outputs["Color"], bg.inputs["Color"])
+    links.new(bg.outputs["Background"], wout.inputs["Surface"])
+
+
+# ── Mercury rotation (NO fcurve access = no crash) ───────────────────────────
+def add_rotation(obj):
+    obj.rotation_euler[2] = 0
+    obj.keyframe_insert(data_path="rotation_euler", frame=1)
+
+    obj.rotation_euler[2] = math.radians(180)
+    obj.keyframe_insert(data_path="rotation_euler", frame=FRAMES)
+
+
+# ── Build Mercury ─────────────────────────────────────────────────────────────
+bpy.ops.mesh.primitive_uv_sphere_add(
+    radius=2.2, segments=128, ring_count=64, location=(0, 0, 0))
+
+mercury = bpy.context.active_object
+mercury.name = "Mercury"
+bpy.ops.object.shade_smooth()
+mercury.data.materials.append(make_mercury_mat())
+
+
+# ── Lights ───────────────────────────────────────────────────────────────────
+bpy.ops.object.light_add(type='SUN', location=(6, -4, 3))
+sun = bpy.context.active_object
+sun.data.energy = 8.0
+sun.rotation_euler = (math.radians(30), 0, math.radians(-45))
+
+bpy.ops.object.light_add(type='SUN', location=(-5, 5, 1))
+fill = bpy.context.active_object
+fill.data.energy = 0.04
+fill.rotation_euler = (math.radians(25), 0, math.radians(130))
+
+
+# ── Animation ────────────────────────────────────────────────────────────────
+bpy.context.scene.frame_start = 1
+bpy.context.scene.frame_end = FRAMES
+add_rotation(mercury)
+
+
+# ── World ─────────────────────────────────────────────────────────────────────
+star_field()
+
+
+# ── Camera ────────────────────────────────────────────────────────────────────
+bpy.ops.object.camera_add(location=(0, -36, 7.5))
+cam = bpy.context.active_object
+cam.rotation_euler = (math.radians(78), 0, 0)
+cam.data.lens = 85
+bpy.context.scene.camera = cam
+
+
+# ── Render ────────────────────────────────────────────────────────────────────
+scene = bpy.context.scene
+scene.render.engine = 'CYCLES'
+
+scene.cycles.samples = 16
+scene.cycles.use_adaptive_sampling = True
+scene.cycles.use_denoising = True
+
+scene.render.resolution_x = 1920
+scene.render.resolution_y = 1080
+
+print("Mercury scene ready (stable Blender 5.1 version)")`,
+    zipFile:"downloads/mercury.zip"
+},
+{
+    name:"Venus",
+    script:`import bpy, math, os
+
+TEX = "C:/Users/Charlie/Downloads/textures/"
+FRAMES = 360
+
+# ── Clear scene ───────────────────────────────────────────────────────────────
+bpy.ops.object.select_all(action='SELECT')
+bpy.ops.object.delete(use_global=False)
+
+for blk in (bpy.data.meshes, bpy.data.materials, bpy.data.images, bpy.data.actions):
+    for item in list(blk):
+        try:
+            blk.remove(item)
+        except:
+            pass
+
+
+def try_load(fp):
+    return bpy.data.images.load(fp) if os.path.isfile(fp) else None
+
+
+# ── Venus material ─────────────────────────────────────────────────────────────
+def make_venus_mat():
+    mat = bpy.data.materials.new("VenusMat")
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+
+    out = nodes.new("ShaderNodeOutputMaterial")
+    bsdf = nodes.new("ShaderNodeBsdfPrincipled")
+    tex = nodes.new("ShaderNodeTexImage")
+    uv = nodes.new("ShaderNodeTexCoord")
+
+    img = try_load(TEX + "venus_surface.jpg")
+
+    if img:
+        tex.image = img
+        links.new(uv.outputs["UV"], tex.inputs["Vector"])
+        links.new(tex.outputs["Color"], bsdf.inputs["Base Color"])
+    else:
+        bsdf.inputs["Base Color"].default_value = (0.80, 0.65, 0.30, 1)
+
+    bsdf.inputs["Roughness"].default_value = 0.75
+
+    links.new(bsdf.outputs["BSDF"], out.inputs["Surface"])
+    return mat
+
+
+# ── Atmosphere volume ─────────────────────────────────────────────────────────
+def make_atmo_volume(radius, color, density):
+    bpy.ops.mesh.primitive_uv_sphere_add(
+        radius=radius, segments=64, ring_count=32, location=(0, 0, 0))
+
+    obj = bpy.context.active_object
+    obj.name = "Atmo_" + str(radius)
+    bpy.ops.object.shade_smooth()
+
+    mat = bpy.data.materials.new("AtmoVol")
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+
+    out = nodes.new("ShaderNodeOutputMaterial")
+    vol = nodes.new("ShaderNodeVolumeScatter")
+
+    vol.inputs["Color"].default_value = (*color, 1)
+    vol.inputs["Density"].default_value = density
+
+    links.new(vol.outputs["Volume"], out.inputs["Volume"])
+
+    obj.data.materials.append(mat)
+    return obj
+
+
+# ── Star field ────────────────────────────────────────────────────────────────
+def star_field():
+    world = bpy.context.scene.world
+    world.use_nodes = True
+
+    nodes = world.node_tree.nodes
+    links = world.node_tree.links
+    nodes.clear()
+
+    wout = nodes.new("ShaderNodeOutputWorld")
+    bg = nodes.new("ShaderNodeBackground")
+    noise = nodes.new("ShaderNodeTexNoise")
+    ramp = nodes.new("ShaderNodeValToRGB")
+    tc = nodes.new("ShaderNodeTexCoord")
+
+    noise.inputs["Scale"].default_value = 400.0
+    noise.inputs["Detail"].default_value = 4.0
+    noise.inputs["Roughness"].default_value = 0.6
+
+    cr = ramp.color_ramp
+    cr.interpolation = 'CONSTANT'
+    cr.elements[0].position = 0.0
+    cr.elements[0].color = (0, 0, 0, 1)
+
+    star = cr.elements.new(0.97)
+    star.color = (1, 1, 1, 1)
+
+    bg.inputs["Strength"].default_value = 0.8
+
+    links.new(tc.outputs["Generated"], noise.inputs["Vector"])
+    links.new(noise.outputs["Fac"], ramp.inputs["Fac"])
+    links.new(ramp.outputs["Color"], bg.inputs["Color"])
+    links.new(bg.outputs["Background"], wout.inputs["Surface"])
+
+
+# ── Safe animation (NO fcurve access) ─────────────────────────────────────────
+def add_rotation(obj):
+    obj.rotation_euler[2] = 0
+    obj.keyframe_insert(data_path="rotation_euler", frame=1)
+
+    obj.rotation_euler[2] = math.radians(-90)
+    obj.keyframe_insert(data_path="rotation_euler", frame=FRAMES)
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# BUILD VENUS
+# ═════════════════════════════════════════════════════════════════════════════
+
+bpy.ops.mesh.primitive_uv_sphere_add(
+    radius=2.2, segments=128, ring_count=64, location=(0, 0, 0))
+
+venus = bpy.context.active_object
+venus.name = "Venus"
+venus.rotation_euler[1] = math.radians(177.4)
+bpy.ops.object.shade_smooth()
+venus.data.materials.append(make_venus_mat())
+
+
+# ── Atmosphere ────────────────────────────────────────────────────────────────
+make_atmo_volume(2.35, (1.0, 0.80, 0.35), 0.04)
+make_atmo_volume(2.60, (1.0, 0.60, 0.15), 0.01)
+
+
+# ── Lights ───────────────────────────────────────────────────────────────────
+bpy.ops.object.light_add(type='SUN', location=(6, -4, 3))
+sun = bpy.context.active_object
+sun.data.energy = 6.0
+sun.rotation_euler = (math.radians(28), 0, math.radians(-40))
+
+bpy.ops.object.light_add(type='SUN', location=(-5, 5, 1))
+fill = bpy.context.active_object
+fill.data.energy = 0.05
+fill.rotation_euler = (math.radians(20), 0, math.radians(130))
+
+
+# ── Animation ────────────────────────────────────────────────────────────────
+bpy.context.scene.frame_start = 1
+bpy.context.scene.frame_end = FRAMES
+add_rotation(venus)
+
+
+# ── World ─────────────────────────────────────────────────────────────────────
+star_field()
+
+
+# ── Camera ────────────────────────────────────────────────────────────────────
+bpy.ops.object.camera_add(location=(0, -36, 7.5))
+cam = bpy.context.active_object
+cam.rotation_euler = (math.radians(78), 0, 0)
+cam.data.lens = 85
+bpy.context.scene.camera = cam
+
+
+# ── Render ────────────────────────────────────────────────────────────────────
+scene = bpy.context.scene
+scene.render.engine = 'CYCLES'
+
+scene.cycles.samples = 16
+scene.cycles.use_adaptive_sampling = True
+scene.cycles.use_denoising = True
+
+scene.render.resolution_x = 1920
+scene.render.resolution_y = 1080
+
+print("Venus scene ready (stable Blender 5.1 version)")`,
+    zipFile:"downloads/venus.zip"
+},
+{
+    name:"Earth",
+    script:`import bpy, math, os
+
+TEX = "C:/Users/Charlie/Downloads/textures/"
+FRAMES = 360
+
+# ── Clear scene ───────────────────────────────────────────────────────────────
+bpy.ops.object.select_all(action='SELECT')
+bpy.ops.object.delete(use_global=False)
+
+for blk in (bpy.data.meshes, bpy.data.materials, bpy.data.images, bpy.data.actions):
+    for item in list(blk):
+        try:
+            blk.remove(item)
+        except:
+            pass
+
+
+def try_load(fp):
+    return bpy.data.images.load(fp) if os.path.isfile(fp) else None
+
+
+# ── Earth material ────────────────────────────────────────────────────────────
+def make_earth_mat():
+    mat = bpy.data.materials.new("EarthMat")
+    mat.use_nodes = True
+
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+
+    out = nodes.new("ShaderNodeOutputMaterial")
+    bsdf = nodes.new("ShaderNodeBsdfPrincipled")
+
+    tex_day = nodes.new("ShaderNodeTexImage")
+    tex_night = nodes.new("ShaderNodeTexImage")
+
+    uv = nodes.new("ShaderNodeTexCoord")
+    light_dir = nodes.new("ShaderNodeLightPath")
+    dot = nodes.new("ShaderNodeVectorMath")
+    ramp = nodes.new("ShaderNodeValToRGB")
+
+    mix = nodes.new("ShaderNodeMixRGB")
+    emission = nodes.new("ShaderNodeEmission")
+    add = nodes.new("ShaderNodeAddShader")
+
+    # Load textures
+    day = try_load(TEX + "earth_daymap.jpg")
+    night = try_load(TEX + "2k_earth_nightmap.jpg")
+
+    if day:
+        tex_day.image = day
+    if night:
+        tex_night.image = night
+
+    # UV mapping
+    links.new(uv.outputs["UV"], tex_day.inputs["Vector"])
+    links.new(uv.outputs["UV"], tex_night.inputs["Vector"])
+
+    # Fake sun direction mask
+    dot.operation = 'DOT_PRODUCT'
+    dot.inputs[1].default_value = (0.0, 0.0, 1.0)
+
+    geom = nodes.new("ShaderNodeNewGeometry")
+    links.new(geom.outputs["Normal"], dot.inputs[0])
+    links.new(dot.outputs["Value"], ramp.inputs["Fac"])
+
+    ramp.color_ramp.elements[0].position = 0.35
+    ramp.color_ramp.elements[1].position = 0.65
+
+    # Base Earth color
+    mix.blend_type = 'MIX'
+    links.new(tex_day.outputs["Color"], mix.inputs[1])
+    links.new(tex_night.outputs["Color"], mix.inputs[2])
+    links.new(ramp.outputs["Color"], mix.inputs["Fac"])
+
+    # CITY LIGHT GLOW (THIS IS THE FIX)
+    emission.inputs["Strength"].default_value = 2.5
+    links.new(tex_night.outputs["Color"], emission.inputs["Color"])
+
+    # Combine surface + lights
+    links.new(mix.outputs["Color"], bsdf.inputs["Base Color"])
+    links.new(bsdf.outputs["BSDF"], add.inputs[0])
+    links.new(emission.outputs["Emission"], add.inputs[1])
+
+    links.new(add.outputs["Shader"], out.inputs["Surface"])
+
+    return mat
+
+
+# ── Cloud material ────────────────────────────────────────────────────────────
+def make_cloud_mat():
+    mat = bpy.data.materials.new("CloudMat")
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+
+    out = nodes.new("ShaderNodeOutputMaterial")
+    bsdf = nodes.new("ShaderNodeBsdfPrincipled")
+    tex = nodes.new("ShaderNodeTexImage")
+    uv = nodes.new("ShaderNodeTexCoord")
+
+    img = try_load(TEX + "earth_clouds.jpg")
+
+    if img:
+        tex.image = img
+        links.new(uv.outputs["UV"], tex.inputs["Vector"])
+        links.new(tex.outputs["Color"], bsdf.inputs["Base Color"])
+        bsdf.inputs["Alpha"].default_value = 0.8
+
+    bsdf.inputs["Roughness"].default_value = 0.2
+
+    mat.blend_method = 'BLEND'
+
+    links.new(bsdf.outputs["BSDF"], out.inputs["Surface"])
+    return mat
+
+
+# ── Moon material ─────────────────────────────────────────────────────────────
+def make_moon_mat():
+    mat = bpy.data.materials.new("MoonMat")
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+
+    out = nodes.new("ShaderNodeOutputMaterial")
+    bsdf = nodes.new("ShaderNodeBsdfPrincipled")
+    tex = nodes.new("ShaderNodeTexImage")
+    uv = nodes.new("ShaderNodeTexCoord")
+
+    img = try_load(TEX + "moon.jpg")
+
+    if img:
+        tex.image = img
+        links.new(uv.outputs["UV"], tex.inputs["Vector"])
+        links.new(tex.outputs["Color"], bsdf.inputs["Base Color"])
+    else:
+        bsdf.inputs["Base Color"].default_value = (0.7, 0.68, 0.65, 1)
+
+    bsdf.inputs["Roughness"].default_value = 0.95
+
+    links.new(bsdf.outputs["BSDF"], out.inputs["Surface"])
+    return mat
+
+
+# ── Atmosphere (fixed safe version) ──────────────────────────────────────────
+def make_atmo_volume(radius, color, density):
+    bpy.ops.mesh.primitive_uv_sphere_add(
+        radius=radius, segments=64, ring_count=32, location=(0, 0, 0))
+
+    obj = bpy.context.active_object
+    obj.name = "Atmo_" + str(radius)
+    bpy.ops.object.shade_smooth()
+
+    mat = bpy.data.materials.new("AtmoVol")
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+
+    out = nodes.new("ShaderNodeOutputMaterial")
+    vol = nodes.new("ShaderNodeVolumeScatter")
+
+    vol.inputs["Color"].default_value = (*color, 1)
+    vol.inputs["Density"].default_value = density
+
+    links.new(vol.outputs["Volume"], out.inputs["Volume"])
+
+    obj.data.materials.append(mat)
+    return obj
+
+
+# ── Star field ────────────────────────────────────────────────────────────────
+def star_field():
+    world = bpy.context.scene.world
+    world.use_nodes = True
+
+    nodes = world.node_tree.nodes
+    links = world.node_tree.links
+    nodes.clear()
+
+    wout = nodes.new("ShaderNodeOutputWorld")
+    bg = nodes.new("ShaderNodeBackground")
+    noise = nodes.new("ShaderNodeTexNoise")
+    ramp = nodes.new("ShaderNodeValToRGB")
+    tc = nodes.new("ShaderNodeTexCoord")
+
+    noise.inputs["Scale"].default_value = 400.0
+    noise.inputs["Detail"].default_value = 4.0
+    noise.inputs["Roughness"].default_value = 0.6
+
+    cr = ramp.color_ramp
+    cr.interpolation = 'CONSTANT'
+    cr.elements[0].position = 0.0
+    cr.elements[0].color = (0, 0, 0, 1)
+
+    star = cr.elements.new(0.97)
+    star.color = (1, 1, 1, 1)
+
+    bg.inputs["Strength"].default_value = 0.8
+
+    links.new(tc.outputs["Generated"], noise.inputs["Vector"])
+    links.new(noise.outputs["Fac"], ramp.inputs["Fac"])
+    links.new(ramp.outputs["Color"], bg.inputs["Color"])
+    links.new(bg.outputs["Background"], wout.inputs["Surface"])
+
+
+# ── SAFE animation (no fcurve crash) ─────────────────────────────────────────
+def add_rotation(obj, end_angle):
+    obj.rotation_euler[2] = 0
+    obj.keyframe_insert(data_path="rotation_euler", frame=1)
+
+    obj.rotation_euler[2] = end_angle
+    obj.keyframe_insert(data_path="rotation_euler", frame=FRAMES)
+
+
+def animate_moon_orbit(obj, radius, speed):
+    for f in range(1, FRAMES + 1):
+        angle = math.radians(speed * f)
+        obj.location.x = math.cos(angle) * radius
+        obj.location.y = math.sin(angle) * radius
+        obj.location.z = 0.3
+        obj.keyframe_insert(data_path="location", frame=f)
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# BUILD SCENE
+# ═════════════════════════════════════════════════════════════════════════════
+
+# Earth
+bpy.ops.mesh.primitive_uv_sphere_add(radius=2.2, segments=128, ring_count=64)
+earth = bpy.context.active_object
+earth.name = "Earth"
+earth.rotation_euler[1] = math.radians(23.4)
+bpy.ops.object.shade_smooth()
+earth.data.materials.append(make_earth_mat())
+
+# Clouds
+bpy.ops.mesh.primitive_uv_sphere_add(radius=2.25, segments=64, ring_count=32)
+clouds = bpy.context.active_object
+clouds.name = "EarthClouds"
+bpy.ops.object.shade_smooth()
+clouds.data.materials.append(make_cloud_mat())
+
+# Atmosphere
+make_atmo_volume(2.35, (0.25, 0.55, 1.0), 0.04)
+make_atmo_volume(2.60, (0.10, 0.30, 0.9), 0.01)
+
+# Moon
+bpy.ops.mesh.primitive_uv_sphere_add(radius=0.6, segments=64, ring_count=32)
+moon = bpy.context.active_object
+moon.name = "Moon"
+bpy.ops.object.shade_smooth()
+moon.data.materials.append(make_moon_mat())
+
+# Lights
+bpy.ops.object.light_add(type='SUN', location=(6, -4, 3))
+sun = bpy.context.active_object
+sun.data.energy = 5.0
+
+bpy.ops.object.light_add(type='SUN', location=(-4, 5, 1))
+fill = bpy.context.active_object
+fill.data.energy = 0.06
+
+# Animation
+bpy.context.scene.frame_start = 1
+bpy.context.scene.frame_end = FRAMES
+
+add_rotation(earth, math.radians(360 * 10))
+add_rotation(clouds, math.radians(360 * 11.5))
+animate_moon_orbit(moon, 4.5, 13)
+
+star_field()
+
+# Camera
+bpy.ops.object.camera_add(location=(0, -36, 7.5))
+cam = bpy.context.active_object
+cam.rotation_euler = (math.radians(78), 0, 0)
+cam.data.lens = 85
+bpy.context.scene.camera = cam
+
+# Render
+scene = bpy.context.scene
+scene.render.engine = 'CYCLES'
+scene.cycles.samples = 16
+scene.cycles.use_adaptive_sampling = True
+scene.cycles.use_denoising = True
+
+scene.render.resolution_x = 1920
+scene.render.resolution_y = 1080
+
+print("Earth + Moon scene ready (Blender 5.1 stable)")`,
+    zipFile:"downloads/earth.zip"
+},
+{
+    name:"Moon",
+    script:`import bpy, math, os
+
+TEX = "C:/Users/Charlie/Downloads/textures/"
+FRAMES = 360
+
+# ── Clear scene ───────────────────────────────────────────────────────────────
+bpy.ops.object.select_all(action='SELECT')
+bpy.ops.object.delete(use_global=False)
+
+for blk in (bpy.data.meshes, bpy.data.materials, bpy.data.images, bpy.data.actions):
+    for item in list(blk):
+        try:
+            blk.remove(item)
+        except:
+            pass
+
+
+def try_load(fp):
+    return bpy.data.images.load(fp) if os.path.isfile(fp) else None
+
+
+# ── Moon material ─────────────────────────────────────────────────────────────
+def make_moon_mat():
+    mat = bpy.data.materials.new("MoonMat")
+    mat.use_nodes = True
+
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+
+    out = nodes.new("ShaderNodeOutputMaterial")
+    bsdf = nodes.new("ShaderNodeBsdfPrincipled")
+    tex = nodes.new("ShaderNodeTexImage")
+    uv = nodes.new("ShaderNodeTexCoord")
+
+    img = try_load(TEX + "moon.jpg")
+
+    if img:
+        tex.image = img
+        links.new(uv.outputs["UV"], tex.inputs["Vector"])
+        links.new(tex.outputs["Color"], bsdf.inputs["Base Color"])
+    else:
+        bsdf.inputs["Base Color"].default_value = (0.7, 0.68, 0.65, 1)
+
+    bsdf.inputs["Roughness"].default_value = 0.95
+    bsdf.inputs["Specular IOR Level"].default_value = 0.02
+
+    links.new(bsdf.outputs["BSDF"], out.inputs["Surface"])
+    return mat
+
+
+# ── Animation (safe) ──────────────────────────────────────────────────────────
+def add_rotation(obj, speed):
+    obj.rotation_euler[2] = 0
+    obj.keyframe_insert(data_path="rotation_euler", frame=1)
+
+    obj.rotation_euler[2] = math.radians(speed)
+    obj.keyframe_insert(data_path="rotation_euler", frame=FRAMES)
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# MOON
+# ═════════════════════════════════════════════════════════════════════════════
+bpy.ops.mesh.primitive_uv_sphere_add(
+    radius=1.5, segments=128, ring_count=64, location=(0, 0, 0))
+
+moon = bpy.context.active_object
+moon.name = "Moon"
+
+bpy.ops.object.shade_smooth()
+moon.data.materials.append(make_moon_mat())
+
+add_rotation(moon, 360 * 6)
+
+
+# ── Lights (same style as Earth scene) ────────────────────────────────────────
+bpy.ops.object.light_add(type='SUN', location=(6, -4, 3))
+sun = bpy.context.active_object
+sun.data.energy = 5.0
+
+bpy.ops.object.light_add(type='SUN', location=(-4, 5, 1))
+fill = bpy.context.active_object
+fill.data.energy = 0.06
+
+
+# ── SAME CAMERA AS YOUR EARTH SCENE ───────────────────────────────────────────
+bpy.ops.object.camera_add(location=(0, -36, 7.5))
+cam = bpy.context.active_object
+cam.name = "Camera"
+cam.rotation_euler = (math.radians(78), 0, 0)
+cam.data.lens = 85
+bpy.context.scene.camera = cam
+
+
+# ── Render settings (same as your setup) ─────────────────────────────────────
+scene = bpy.context.scene
+scene.frame_start = 1
+scene.frame_end = FRAMES
+
+scene.render.engine = 'CYCLES'
+scene.cycles.samples = 16
+scene.cycles.use_adaptive_sampling = True
+scene.cycles.use_denoising = True
+
+scene.render.resolution_x = 1920
+scene.render.resolution_y = 1080
+
+print("Moon scene ready (same camera + stable setup)")`,
+    zipFile:"downloads/moon.zip"
+},
+{
+    name:"Mars",
+    script:`import bpy, math, os
+
+TEX = "C:/Users/Charlie/Downloads/textures/"
+FRAMES = 360
+
+# ── Clear scene ───────────────────────────────────────────────────────────────
+bpy.ops.object.select_all(action='SELECT')
+bpy.ops.object.delete(use_global=False)
+
+for blk in (bpy.data.meshes, bpy.data.materials, bpy.data.images, bpy.data.actions):
+    for item in list(blk):
+        try:
+            blk.remove(item)
+        except:
+            pass
+
+
+def try_load(fp):
+    return bpy.data.images.load(fp) if os.path.isfile(fp) else None
+
+
+# ── Mars material ─────────────────────────────────────────────────────────────
+def make_mars_mat():
+    mat = bpy.data.materials.new("MarsMat")
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+
+    out = nodes.new("ShaderNodeOutputMaterial")
+    bsdf = nodes.new("ShaderNodeBsdfPrincipled")
+    tex = nodes.new("ShaderNodeTexImage")
+    uv = nodes.new("ShaderNodeTexCoord")
+
+    img = try_load(TEX + "2k_mars.jpg")
+
+    if img:
+        tex.image = img
+        links.new(uv.outputs["UV"], tex.inputs["Vector"])
+        links.new(tex.outputs["Color"], bsdf.inputs["Base Color"])
+    else:
+        bsdf.inputs["Base Color"].default_value = (0.72, 0.30, 0.15, 1)
+
+    bsdf.inputs["Roughness"].default_value = 0.88
+
+    links.new(bsdf.outputs["BSDF"], out.inputs["Surface"])
+    return mat
+
+
+# ── Atmosphere volume ─────────────────────────────────────────────────────────
+def make_atmo_volume(radius, color, density):
+    bpy.ops.mesh.primitive_uv_sphere_add(
+        radius=radius, segments=64, ring_count=32, location=(0, 0, 0))
+
+    obj = bpy.context.active_object
+    obj.name = "Atmo_" + str(radius)
+    bpy.ops.object.shade_smooth()
+
+    mat = bpy.data.materials.new("AtmoVol")
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+
+    out = nodes.new("ShaderNodeOutputMaterial")
+    vol = nodes.new("ShaderNodeVolumeScatter")
+
+    vol.inputs["Color"].default_value = (*color, 1)
+    vol.inputs["Density"].default_value = density
+
+    links.new(vol.outputs["Volume"], out.inputs["Volume"])
+
+    obj.data.materials.append(mat)
+    return obj
+
+
+# ── Star field ────────────────────────────────────────────────────────────────
+def star_field():
+    world = bpy.context.scene.world
+    world.use_nodes = True
+
+    nodes = world.node_tree.nodes
+    links = world.node_tree.links
+    nodes.clear()
+
+    wout = nodes.new("ShaderNodeOutputWorld")
+    bg = nodes.new("ShaderNodeBackground")
+    noise = nodes.new("ShaderNodeTexNoise")
+    ramp = nodes.new("ShaderNodeValToRGB")
+    tc = nodes.new("ShaderNodeTexCoord")
+
+    noise.inputs["Scale"].default_value = 400.0
+    noise.inputs["Detail"].default_value = 4.0
+    noise.inputs["Roughness"].default_value = 0.6
+
+    cr = ramp.color_ramp
+    cr.interpolation = 'CONSTANT'
+    cr.elements[0].position = 0.0
+    cr.elements[0].color = (0, 0, 0, 1)
+
+    star = cr.elements.new(0.97)
+    star.color = (1, 1, 1, 1)
+
+    bg.inputs["Strength"].default_value = 0.8
+
+    links.new(tc.outputs["Generated"], noise.inputs["Vector"])
+    links.new(noise.outputs["Fac"], ramp.inputs["Fac"])
+    links.new(ramp.outputs["Color"], bg.inputs["Color"])
+    links.new(bg.outputs["Background"], wout.inputs["Surface"])
+
+
+# ── SAFE animation (no fcurve access) ─────────────────────────────────────────
+def add_rotation(obj):
+    obj.rotation_euler[2] = 0
+    obj.keyframe_insert(data_path="rotation_euler", frame=1)
+
+    obj.rotation_euler[2] = math.radians(360 * 9.7)
+    obj.keyframe_insert(data_path="rotation_euler", frame=FRAMES)
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# BUILD MARS
+# ═════════════════════════════════════════════════════════════════════════════
+
+bpy.ops.mesh.primitive_uv_sphere_add(
+    radius=2.2, segments=128, ring_count=64, location=(0, 0, 0))
+
+mars = bpy.context.active_object
+mars.name = "Mars"
+mars.rotation_euler[1] = math.radians(25.2)
+bpy.ops.object.shade_smooth()
+mars.data.materials.append(make_mars_mat())
+
+
+# ── Atmosphere ────────────────────────────────────────────────────────────────
+make_atmo_volume(2.35, (0.90, 0.50, 0.22), 0.02)
+make_atmo_volume(2.55, (0.80, 0.35, 0.10), 0.005)
+
+
+# ── Lights ───────────────────────────────────────────────────────────────────
+bpy.ops.object.light_add(type='SUN', location=(6, -4, 3))
+sun = bpy.context.active_object
+sun.data.energy = 4.5
+sun.rotation_euler = (math.radians(28), 0, math.radians(-40))
+
+bpy.ops.object.light_add(type='SUN', location=(-4, 5, 1))
+fill = bpy.context.active_object
+fill.data.energy = 0.05
+fill.rotation_euler = (math.radians(20), 0, math.radians(130))
+
+
+# ── Animation ────────────────────────────────────────────────────────────────
+bpy.context.scene.frame_start = 1
+bpy.context.scene.frame_end = FRAMES
+add_rotation(mars)
+
+
+# ── World ─────────────────────────────────────────────────────────────────────
+star_field()
+
+
+# ── Camera ────────────────────────────────────────────────────────────────────
+bpy.ops.object.camera_add(location=(0, -36, 7.5))
+cam = bpy.context.active_object
+cam.rotation_euler = (math.radians(78), 0, 0)
+cam.data.lens = 85
+bpy.context.scene.camera = cam
+
+
+# ── Render ────────────────────────────────────────────────────────────────────
+scene = bpy.context.scene
+scene.render.engine = 'CYCLES'
+
+scene.cycles.samples = 16
+scene.cycles.use_adaptive_sampling = True
+scene.cycles.use_denoising = True
+
+scene.render.resolution_x = 1920
+scene.render.resolution_y = 1080
+
+print("Mars scene ready (stable Blender 5.1 version)")`,
+    zipFile:"downloads/mars.zip"
+},
+{
+    name:"Jupiter",
+    script:`import bpy, math, os
+
+TEX = "C:/Users/Charlie/Downloads/textures/"
+FRAMES = 360
+
+# ── Clear scene ───────────────────────────────────────────────────────────────
+bpy.ops.object.select_all(action='SELECT')
+bpy.ops.object.delete(use_global=False)
+
+for blk in (bpy.data.meshes, bpy.data.materials, bpy.data.images, bpy.data.actions):
+    for item in list(blk):
+        try:
+            blk.remove(item)
+        except:
+            pass
+
+
+def try_load(fp):
+    return bpy.data.images.load(fp) if os.path.isfile(fp) else None
+
+
+# ── Jupiter material ───────────────────────────────────────────────────────────
+def make_jupiter_mat():
+    mat = bpy.data.materials.new("JupiterMat")
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+
+    out = nodes.new("ShaderNodeOutputMaterial")
+    bsdf = nodes.new("ShaderNodeBsdfPrincipled")
+    tex = nodes.new("ShaderNodeTexImage")
+    uv = nodes.new("ShaderNodeTexCoord")
+
+    img = try_load(TEX + "2k_jupiter.jpg")
+
+    if img:
+        tex.image = img
+        links.new(uv.outputs["UV"], tex.inputs["Vector"])
+        links.new(tex.outputs["Color"], bsdf.inputs["Base Color"])
+    else:
+        bsdf.inputs["Base Color"].default_value = (0.78, 0.63, 0.48, 1)
+
+    bsdf.inputs["Roughness"].default_value = 0.60
+
+    links.new(bsdf.outputs["BSDF"], out.inputs["Surface"])
+    return mat
+
+
+# ── Atmosphere volume ─────────────────────────────────────────────────────────
+def make_atmo_volume(radius, color, density):
+    bpy.ops.mesh.primitive_uv_sphere_add(
+        radius=radius, segments=64, ring_count=32, location=(0, 0, 0))
+
+    obj = bpy.context.active_object
+    obj.name = "Atmo_" + str(radius)
+    bpy.ops.object.shade_smooth()
+
+    mat = bpy.data.materials.new("AtmoVol")
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+
+    out = nodes.new("ShaderNodeOutputMaterial")
+    vol = nodes.new("ShaderNodeVolumeScatter")
+
+    vol.inputs["Color"].default_value = (*color, 1)
+    vol.inputs["Density"].default_value = density
+
+    links.new(vol.outputs["Volume"], out.inputs["Volume"])
+
+    obj.data.materials.append(mat)
+    return obj
+
+
+# ── Star field ────────────────────────────────────────────────────────────────
+def star_field():
+    world = bpy.context.scene.world
+    world.use_nodes = True
+
+    nodes = world.node_tree.nodes
+    links = world.node_tree.links
+    nodes.clear()
+
+    wout = nodes.new("ShaderNodeOutputWorld")
+    bg = nodes.new("ShaderNodeBackground")
+    noise = nodes.new("ShaderNodeTexNoise")
+    ramp = nodes.new("ShaderNodeValToRGB")
+    tc = nodes.new("ShaderNodeTexCoord")
+
+    noise.inputs["Scale"].default_value = 400.0
+    noise.inputs["Detail"].default_value = 4.0
+    noise.inputs["Roughness"].default_value = 0.6
+
+    cr = ramp.color_ramp
+    cr.interpolation = 'CONSTANT'
+    cr.elements[0].position = 0.0
+    cr.elements[0].color = (0, 0, 0, 1)
+
+    star = cr.elements.new(0.97)
+    star.color = (1, 1, 1, 1)
+
+    bg.inputs["Strength"].default_value = 0.8
+
+    links.new(tc.outputs["Generated"], noise.inputs["Vector"])
+    links.new(noise.outputs["Fac"], ramp.inputs["Fac"])
+    links.new(ramp.outputs["Color"], bg.inputs["Color"])
+    links.new(bg.outputs["Background"], wout.inputs["Surface"])
+
+
+# ── SAFE animation (NO fcurve access) ─────────────────────────────────────────
+def add_rotation(obj):
+    obj.rotation_euler[2] = 0
+    obj.keyframe_insert(data_path="rotation_euler", frame=1)
+
+    obj.rotation_euler[2] = math.radians(360 * 22)
+    obj.keyframe_insert(data_path="rotation_euler", frame=FRAMES)
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# BUILD JUPITER
+# ═════════════════════════════════════════════════════════════════════════════
+
+bpy.ops.mesh.primitive_uv_sphere_add(
+    radius=2.2, segments=128, ring_count=64, location=(0, 0, 0))
+
+jupiter = bpy.context.active_object
+jupiter.name = "Jupiter"
+
+jupiter.scale = (1.0, 1.0, 0.935)
+bpy.ops.object.transform_apply(scale=True)
+
+jupiter.rotation_euler[1] = math.radians(3.1)
+bpy.ops.object.shade_smooth()
+
+jupiter.data.materials.append(make_jupiter_mat())
+
+
+# ── Atmosphere ────────────────────────────────────────────────────────────────
+make_atmo_volume(2.35, (0.85, 0.70, 0.50), 0.02)
+make_atmo_volume(2.60, (0.80, 0.55, 0.30), 0.006)
+
+
+# ── Lights ───────────────────────────────────────────────────────────────────
+bpy.ops.object.light_add(type='SUN', location=(6, -4, 3))
+sun = bpy.context.active_object
+sun.data.energy = 3.5
+sun.rotation_euler = (math.radians(28), 0, math.radians(-38))
+
+bpy.ops.object.light_add(type='SUN', location=(-5, 5, 1))
+fill = bpy.context.active_object
+fill.data.energy = 0.06
+fill.rotation_euler = (math.radians(20), 0, math.radians(130))
+
+
+# ── Animation ────────────────────────────────────────────────────────────────
+bpy.context.scene.frame_start = 1
+bpy.context.scene.frame_end = FRAMES
+add_rotation(jupiter)
+
+
+# ── World ─────────────────────────────────────────────────────────────────────
+star_field()
+
+
+# ── Camera ────────────────────────────────────────────────────────────────────
+bpy.ops.object.camera_add(location=(0, -36, 7.5))
+cam = bpy.context.active_object
+cam.rotation_euler = (math.radians(78), 0, 0)
+cam.data.lens = 85
+bpy.context.scene.camera = cam
+
+
+# ── Render ────────────────────────────────────────────────────────────────────
+scene = bpy.context.scene
+scene.render.engine = 'CYCLES'
+
+scene.cycles.samples = 16
+scene.cycles.use_adaptive_sampling = True
+scene.cycles.use_denoising = True
+
+scene.render.resolution_x = 1920
+scene.render.resolution_y = 1080
+
+print("Jupiter scene ready (stable Blender 5.1 version)")`,
+    zipFile:"downloads/jupiter.zip"
+},
+{
+    name:"Saturn",
+    script:`import bpy, math, os
+
+TEX = "C:/Users/Charlie/Downloads/textures/"
+FRAMES = 360
+
+# ── Clear scene ───────────────────────────────────────────────────────────────
+bpy.ops.object.select_all(action='SELECT')
+bpy.ops.object.delete(use_global=False)
+
+for blk in (bpy.data.meshes, bpy.data.materials, bpy.data.images, bpy.data.actions):
+    for item in list(blk):
+        try:
+            blk.remove(item)
+        except:
+            pass
+
+
+def try_load(fp):
+    return bpy.data.images.load(fp) if os.path.isfile(fp) else None
+
+
+# ── Saturn material ───────────────────────────────────────────────────────────
+def make_saturn_mat():
+    mat = bpy.data.materials.new("SaturnMat")
+    mat.use_nodes = True
+
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+
+    out = nodes.new("ShaderNodeOutputMaterial")
+    bsdf = nodes.new("ShaderNodeBsdfPrincipled")
+    tex = nodes.new("ShaderNodeTexImage")
+    uv = nodes.new("ShaderNodeTexCoord")
+
+    img = try_load(TEX + "2k_saturn.jpg")
+
+    if img:
+        tex.image = img
+        links.new(uv.outputs["UV"], tex.inputs["Vector"])
+        links.new(tex.outputs["Color"], bsdf.inputs["Base Color"])
+    else:
+        bsdf.inputs["Base Color"].default_value = (0.85, 0.78, 0.55, 1)
+
+    bsdf.inputs["Roughness"].default_value = 0.65
+
+    links.new(bsdf.outputs["BSDF"], out.inputs["Surface"])
+    return mat
+
+
+# ── Ring material (safe alpha) ────────────────────────────────────────────────
+def make_ring_mat():
+    mat = bpy.data.materials.new("RingMat")
+    mat.use_nodes = True
+    mat.blend_method = 'BLEND'
+
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+
+    out = nodes.new("ShaderNodeOutputMaterial")
+    bsdf = nodes.new("ShaderNodeBsdfPrincipled")
+    tex = nodes.new("ShaderNodeTexImage")
+    uv = nodes.new("ShaderNodeTexCoord")
+
+    img = try_load(TEX + "2k_saturn_ring_alpha.png")
+
+    if img:
+        tex.image = img
+        links.new(uv.outputs["UV"], tex.inputs["Vector"])
+        links.new(tex.outputs["Color"], bsdf.inputs["Base Color"])
+    else:
+        bsdf.inputs["Base Color"].default_value = (0.80, 0.72, 0.55, 1)
+
+    bsdf.inputs["Roughness"].default_value = 0.8
+
+    links.new(bsdf.outputs["BSDF"], out.inputs["Surface"])
+    return mat
+
+
+# ── Atmosphere (simplified safe version) ─────────────────────────────────────
+def make_atmo_volume(radius, color, density):
+    bpy.ops.mesh.primitive_uv_sphere_add(
+        radius=radius, segments=64, ring_count=32, location=(0, 0, 0))
+
+    obj = bpy.context.active_object
+    obj.name = "Atmo_" + str(radius)
+    bpy.ops.object.shade_smooth()
+
+    mat = bpy.data.materials.new("AtmoVol")
+    mat.use_nodes = True
+
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+
+    out = nodes.new("ShaderNodeOutputMaterial")
+    vol = nodes.new("ShaderNodeVolumeScatter")
+
+    vol.inputs["Color"].default_value = (*color, 1)
+    vol.inputs["Density"].default_value = density
+
+    links.new(vol.outputs["Volume"], out.inputs["Volume"])
+
+    obj.data.materials.append(mat)
+    return obj
+
+
+# ── Star field ────────────────────────────────────────────────────────────────
+def star_field():
+    world = bpy.context.scene.world
+    world.use_nodes = True
+
+    nodes = world.node_tree.nodes
+    links = world.node_tree.links
+    nodes.clear()
+
+    wout = nodes.new("ShaderNodeOutputWorld")
+    bg = nodes.new("ShaderNodeBackground")
+    noise = nodes.new("ShaderNodeTexNoise")
+    ramp = nodes.new("ShaderNodeValToRGB")
+    tc = nodes.new("ShaderNodeTexCoord")
+
+    noise.inputs["Scale"].default_value = 400.0
+    noise.inputs["Detail"].default_value = 4.0
+    noise.inputs["Roughness"].default_value = 0.6
+
+    cr = ramp.color_ramp
+    cr.interpolation = 'CONSTANT'
+
+    cr.elements[0].position = 0.0
+    cr.elements[0].color = (0, 0, 0, 1)
+
+    star = cr.elements.new(0.97)
+    star.color = (1, 1, 1, 1)
+
+    bg.inputs["Strength"].default_value = 0.8
+
+    links.new(tc.outputs["Generated"], noise.inputs["Vector"])
+    links.new(noise.outputs["Fac"], ramp.inputs["Fac"])
+    links.new(ramp.outputs["Color"], bg.inputs["Color"])
+    links.new(bg.outputs["Background"], wout.inputs["Surface"])
+
+
+# ── SAFE animation (NO fcurve access) ─────────────────────────────────────────
+def add_rotation(obj, speed):
+    obj.rotation_euler[2] = 0
+    obj.keyframe_insert(data_path="rotation_euler", frame=1)
+
+    obj.rotation_euler[2] = math.radians(360 * speed)
+    obj.keyframe_insert(data_path="rotation_euler", frame=FRAMES)
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# BUILD SATURN
+# ═════════════════════════════════════════════════════════════════════════════
+
+bpy.ops.mesh.primitive_uv_sphere_add(
+    radius=2.2, segments=128, ring_count=64, location=(0, 0, 0))
+
+saturn = bpy.context.active_object
+saturn.name = "Saturn"
+
+saturn.scale = (1.0, 1.0, 0.90)
+bpy.ops.object.transform_apply(scale=True)
+
+saturn.rotation_euler[0] = math.radians(26.7)
+bpy.ops.object.shade_smooth()
+
+saturn.data.materials.append(make_saturn_mat())
+
+
+# ── Atmosphere ────────────────────────────────────────────────────────────────
+make_atmo_volume(2.32, (0.90, 0.82, 0.58), 0.015)
+
+
+# ── Rings (fixed: no modifier crash) ─────────────────────────────────────────
+bpy.ops.mesh.primitive_circle_add(
+    radius=5.5, vertices=128, fill_type='NGON', location=(0, 0, 0))
+
+rings = bpy.context.active_object
+rings.name = "SaturnRings"
+rings.rotation_euler[0] = math.radians(26.7)
+bpy.ops.object.shade_smooth()
+
+rings.data.materials.append(make_ring_mat())
+
+
+# ── Lights ───────────────────────────────────────────────────────────────────
+bpy.ops.object.light_add(type='SUN', location=(6, -4, 3))
+sun = bpy.context.active_object
+sun.data.energy = 2.5
+sun.rotation_euler = (math.radians(28), 0, math.radians(-38))
+
+bpy.ops.object.light_add(type='SUN', location=(-5, 5, 1))
+fill = bpy.context.active_object
+fill.data.energy = 0.06
+fill.rotation_euler = (math.radians(20), 0, math.radians(130))
+
+
+# ── Animation ────────────────────────────────────────────────────────────────
+# ── Animation ────────────────────────────────────────────────────────────────
+bpy.context.scene.frame_start = 1
+bpy.context.scene.frame_end = FRAMES
+
+# Saturn rotates fast
+add_rotation(saturn, 20)
+
+# Rings rotate slower
+add_rotation(rings, 5)
+
+star_field()
+
+
+# ── Camera ────────────────────────────────────────────────────────────────────
+bpy.ops.object.camera_add(location=(0, -36, 10))
+cam = bpy.context.active_object
+cam.rotation_euler = (math.radians(75), 0, 0)
+cam.data.lens = 85
+bpy.context.scene.camera = cam
+
+
+# ── Render ────────────────────────────────────────────────────────────────────
+scene = bpy.context.scene
+scene.render.engine = 'CYCLES'
+
+scene.cycles.samples = 32
+scene.cycles.use_adaptive_sampling = True
+scene.cycles.use_denoising = True
+
+scene.render.resolution_x = 1920
+scene.render.resolution_y = 1080
+
+print("Saturn scene ready (stable Blender 5.1 version)")
+`,
+    zipFile:"downloads/saturn.zip"
+},
+{
+    name:"Uranus",
+    script:`import bpy, math, os
+
+TEX = "C:/Users/Charlie/Downloads/textures/"
+FRAMES = 360
+
+# ── Clear scene ───────────────────────────────────────────────────────────────
+bpy.ops.object.select_all(action='SELECT')
+bpy.ops.object.delete(use_global=False)
+
+for blk in (bpy.data.meshes, bpy.data.materials, bpy.data.images, bpy.data.actions):
+    for item in list(blk):
+        try:
+            blk.remove(item)
+        except:
+            pass
+
+
+def try_load(fp):
+    return bpy.data.images.load(fp) if os.path.isfile(fp) else None
+
+
+# ── Uranus material ───────────────────────────────────────────────────────────
+def make_uranus_mat():
+    mat = bpy.data.materials.new("UranusMat")
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+
+    out = nodes.new("ShaderNodeOutputMaterial")
+    bsdf = nodes.new("ShaderNodeBsdfPrincipled")
+    tex = nodes.new("ShaderNodeTexImage")
+    uv = nodes.new("ShaderNodeTexCoord")
+
+    img = try_load(TEX + "2k_uranus.jpg")
+
+    if img:
+        tex.image = img
+        links.new(uv.outputs["UV"], tex.inputs["Vector"])
+        links.new(tex.outputs["Color"], bsdf.inputs["Base Color"])
+    else:
+        bsdf.inputs["Base Color"].default_value = (0.62, 0.90, 0.92, 1)
+
+    bsdf.inputs["Roughness"].default_value = 0.50
+
+    links.new(bsdf.outputs["BSDF"], out.inputs["Surface"])
+    return mat
+
+
+# ── Atmosphere volume ─────────────────────────────────────────────────────────
+def make_atmo_volume(radius, color, density):
+    bpy.ops.mesh.primitive_uv_sphere_add(
+        radius=radius, segments=64, ring_count=32, location=(0, 0, 0))
+
+    obj = bpy.context.active_object
+    obj.name = "Atmo_" + str(radius)
+    bpy.ops.object.shade_smooth()
+
+    mat = bpy.data.materials.new("AtmoVol")
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+
+    out = nodes.new("ShaderNodeOutputMaterial")
+    vol = nodes.new("ShaderNodeVolumeScatter")
+
+    vol.inputs["Color"].default_value = (*color, 1)
+    vol.inputs["Density"].default_value = density
+
+    links.new(vol.outputs["Volume"], out.inputs["Volume"])
+
+    obj.data.materials.append(mat)
+    return obj
+
+
+# ── Star field ────────────────────────────────────────────────────────────────
+def star_field():
+    world = bpy.context.scene.world
+    world.use_nodes = True
+
+    nodes = world.node_tree.nodes
+    links = world.node_tree.links
+    nodes.clear()
+
+    wout = nodes.new("ShaderNodeOutputWorld")
+    bg = nodes.new("ShaderNodeBackground")
+    noise = nodes.new("ShaderNodeTexNoise")
+    ramp = nodes.new("ShaderNodeValToRGB")
+    tc = nodes.new("ShaderNodeTexCoord")
+
+    noise.inputs["Scale"].default_value = 400.0
+    noise.inputs["Detail"].default_value = 4.0
+    noise.inputs["Roughness"].default_value = 0.6
+
+    cr = ramp.color_ramp
+    cr.interpolation = 'CONSTANT'
+    cr.elements[0].position = 0.0
+    cr.elements[0].color = (0, 0, 0, 1)
+
+    star = cr.elements.new(0.97)
+    star.color = (1, 1, 1, 1)
+
+    bg.inputs["Strength"].default_value = 0.8
+
+    links.new(tc.outputs["Generated"], noise.inputs["Vector"])
+    links.new(noise.outputs["Fac"], ramp.inputs["Fac"])
+    links.new(ramp.outputs["Color"], bg.inputs["Color"])
+    links.new(bg.outputs["Background"], wout.inputs["Surface"])
+
+
+# ── SAFE animation (no fcurve access) ─────────────────────────────────────────
+def add_rotation(obj):
+    obj.rotation_euler[2] = 0
+    obj.keyframe_insert(data_path="rotation_euler", frame=1)
+
+    obj.rotation_euler[2] = math.radians(-360 * 14)
+    obj.keyframe_insert(data_path="rotation_euler", frame=FRAMES)
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# BUILD URANUS
+# ═════════════════════════════════════════════════════════════════════════════
+
+bpy.ops.mesh.primitive_uv_sphere_add(
+    radius=2.2, segments=128, ring_count=64, location=(0, 0, 0))
+
+uranus = bpy.context.active_object
+uranus.name = "Uranus"
+
+uranus.rotation_euler[0] = math.radians(97.8)
+bpy.ops.object.shade_smooth()
+
+uranus.data.materials.append(make_uranus_mat())
+
+
+# ── Atmosphere ────────────────────────────────────────────────────────────────
+make_atmo_volume(2.35, (0.55, 0.92, 0.95), 0.03)
+make_atmo_volume(2.60, (0.40, 0.80, 0.88), 0.008)
+
+
+# ── Lights ───────────────────────────────────────────────────────────────────
+bpy.ops.object.light_add(type='SUN', location=(6, -4, 3))
+sun = bpy.context.active_object
+sun.data.energy = 2.0
+sun.rotation_euler = (math.radians(28), 0, math.radians(-38))
+
+bpy.ops.object.light_add(type='SUN', location=(-5, 5, 1))
+fill = bpy.context.active_object
+fill.data.energy = 0.06
+fill.rotation_euler = (math.radians(20), 0, math.radians(130))
+
+
+# ── Animation ────────────────────────────────────────────────────────────────
+bpy.context.scene.frame_start = 1
+bpy.context.scene.frame_end = FRAMES
+add_rotation(uranus)
+
+
+# ── World ─────────────────────────────────────────────────────────────────────
+star_field()
+
+
+# ── Camera ────────────────────────────────────────────────────────────────────
+bpy.ops.object.camera_add(location=(0, -36, 7.5))
+cam = bpy.context.active_object
+cam.rotation_euler = (math.radians(78), 0, 0)
+cam.data.lens = 85
+bpy.context.scene.camera = cam
+
+
+# ── Render ────────────────────────────────────────────────────────────────────
+scene = bpy.context.scene
+scene.render.engine = 'CYCLES'
+
+scene.cycles.samples = 16
+scene.cycles.use_adaptive_sampling = True
+scene.cycles.use_denoising = True
+
+scene.render.resolution_x = 1920
+scene.render.resolution_y = 1080
+
+print("Uranus scene ready (stable Blender 5.1 version)")`,
+    zipFile:"downloads/uranus.zip"
+},
+{
+    name:"Neptune",
+    script:`import bpy, math, os
+
+TEX = "C:/Users/Charlie/Downloads/textures/"
+FRAMES = 360
+
+# ── Clear scene ───────────────────────────────────────────────────────────────
+bpy.ops.object.select_all(action='SELECT')
+bpy.ops.object.delete(use_global=False)
+
+for blk in (bpy.data.meshes, bpy.data.materials, bpy.data.images, bpy.data.actions):
+    for item in list(blk):
+        try:
+            blk.remove(item)
+        except:
+            pass
+
+
+def try_load(fp):
+    return bpy.data.images.load(fp) if os.path.isfile(fp) else None
+
+
+# ── Neptune material ──────────────────────────────────────────────────────────
+def make_neptune_mat():
+    mat = bpy.data.materials.new("NeptuneMat")
+    mat.use_nodes = True
+
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+
+    out = nodes.new("ShaderNodeOutputMaterial")
+    bsdf = nodes.new("ShaderNodeBsdfPrincipled")
+    tex = nodes.new("ShaderNodeTexImage")
+    uv = nodes.new("ShaderNodeTexCoord")
+
+    img = try_load(TEX + "2k_neptune.jpg")
+
+    if img:
+        tex.image = img
+        links.new(uv.outputs["UV"], tex.inputs["Vector"])
+        links.new(tex.outputs["Color"], bsdf.inputs["Base Color"])
+    else:
+        bsdf.inputs["Base Color"].default_value = (0.15, 0.35, 0.75, 1)
+
+    bsdf.inputs["Roughness"].default_value = 0.45
+
+    links.new(bsdf.outputs["BSDF"], out.inputs["Surface"])
+    return mat
+
+
+# ── Atmosphere ────────────────────────────────────────────────────────────────
+def make_atmo_volume(radius, color, density):
+    bpy.ops.mesh.primitive_uv_sphere_add(
+        radius=radius, segments=64, ring_count=32, location=(0, 0, 0))
+
+    obj = bpy.context.active_object
+    obj.name = "Atmo_" + str(radius)
+    bpy.ops.object.shade_smooth()
+
+    mat = bpy.data.materials.new("AtmoVol")
+    mat.use_nodes = True
+
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+
+    out = nodes.new("ShaderNodeOutputMaterial")
+    vol = nodes.new("ShaderNodeVolumeScatter")
+
+    vol.inputs["Color"].default_value = (*color, 1)
+    vol.inputs["Density"].default_value = density
+
+    links.new(vol.outputs["Volume"], out.inputs["Volume"])
+
+    obj.data.materials.append(mat)
+    return obj
+
+
+# ── Star field ────────────────────────────────────────────────────────────────
+def star_field():
+    world = bpy.context.scene.world
+    world.use_nodes = True
+
+    nodes = world.node_tree.nodes
+    links = world.node_tree.links
+    nodes.clear()
+
+    wout = nodes.new("ShaderNodeOutputWorld")
+    bg = nodes.new("ShaderNodeBackground")
+    noise = nodes.new("ShaderNodeTexNoise")
+    ramp = nodes.new("ShaderNodeValToRGB")
+    tc = nodes.new("ShaderNodeTexCoord")
+
+    noise.inputs["Scale"].default_value = 400.0
+    noise.inputs["Detail"].default_value = 4.0
+    noise.inputs["Roughness"].default_value = 0.6
+
+    cr = ramp.color_ramp
+    cr.interpolation = 'CONSTANT'
+    cr.elements[0].position = 0.0
+    cr.elements[0].color = (0, 0, 0, 1)
+
+    star = cr.elements.new(0.97)
+    star.color = (1, 1, 1, 1)
+
+    bg.inputs["Strength"].default_value = 0.8
+
+    links.new(tc.outputs["Generated"], noise.inputs["Vector"])
+    links.new(noise.outputs["Fac"], ramp.inputs["Fac"])
+    links.new(ramp.outputs["Color"], bg.inputs["Color"])
+    links.new(bg.outputs["Background"], wout.inputs["Surface"])
+
+
+# ── SAFE animation ────────────────────────────────────────────────────────────
+def add_rotation(obj, speed):
+    obj.rotation_euler[2] = 0
+    obj.keyframe_insert(data_path="rotation_euler", frame=1)
+
+    obj.rotation_euler[2] = math.radians(360 * speed)
+    obj.keyframe_insert(data_path="rotation_euler", frame=FRAMES)
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# BUILD NEPTUNE
+# ═════════════════════════════════════════════════════════════════════════════
+
+bpy.ops.mesh.primitive_uv_sphere_add(
+    radius=2.2, segments=128, ring_count=64, location=(0, 0, 0))
+
+neptune = bpy.context.active_object
+neptune.name = "Neptune"
+bpy.ops.object.shade_smooth()
+
+neptune.data.materials.append(make_neptune_mat())
+
+
+# ── Atmosphere ────────────────────────────────────────────────────────────────
+make_atmo_volume(2.35, (0.10, 0.25, 0.80), 0.03)
+make_atmo_volume(2.60, (0.05, 0.15, 0.50), 0.008)
+
+
+# ── Lights ───────────────────────────────────────────────────────────────────
+bpy.ops.object.light_add(type='SUN', location=(6, -4, 3))
+sun = bpy.context.active_object
+sun.data.energy = 2.5
+sun.rotation_euler = (math.radians(28), 0, math.radians(-38))
+
+bpy.ops.object.light_add(type='SUN', location=(-5, 5, 1))
+fill = bpy.context.active_object
+fill.data.energy = 0.06
+fill.rotation_euler = (math.radians(20), 0, math.radians(130))
+
+
+# ── Animation ────────────────────────────────────────────────────────────────
+bpy.context.scene.frame_start = 1
+bpy.context.scene.frame_end = FRAMES
+add_rotation(neptune, speed=16)  # slow orbit spin
+
+
+# ── World ─────────────────────────────────────────────────────────────────────
+star_field()
+
+
+# ── Camera ────────────────────────────────────────────────────────────────────
+bpy.ops.object.camera_add(location=(0, -36, 7.5))
+cam = bpy.context.active_object
+cam.rotation_euler = (math.radians(78), 0, 0)
+cam.data.lens = 85
+bpy.context.scene.camera = cam
+
+
+# ── Render ────────────────────────────────────────────────────────────────────
+scene = bpy.context.scene
+scene.render.engine = 'CYCLES'
+
+scene.cycles.samples = 16
+scene.cycles.use_adaptive_sampling = True
+scene.cycles.use_denoising = True
+
+scene.render.resolution_x = 1920
+scene.render.resolution_y = 1080
+
+print("Neptune scene ready (stable Blender 5.1 version)")`,
+    zipFile:"downloads/neptune.zip"
+},
+{
+    name:"Pluto",
+    script:`import bpy, math, os
+
+TEX = "C:/Users/Charlie/Downloads/textures/"
+FRAMES = 360
+
+# ── Clear scene ───────────────────────────────────────────────────────────────
+bpy.ops.object.select_all(action='SELECT')
+bpy.ops.object.delete(use_global=False)
+
+for blk in (bpy.data.meshes, bpy.data.materials, bpy.data.images, bpy.data.actions):
+    for item in list(blk):
+        try:
+            blk.remove(item)
+        except:
+            pass
+
+
+def try_load(fp):
+    return bpy.data.images.load(fp) if os.path.isfile(fp) else None
+
+
+# ── Pluto material ────────────────────────────────────────────────────────────
+def make_pluto_mat():
+    mat = bpy.data.materials.new("PlutoMat")
+    mat.use_nodes = True
+
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+
+    out = nodes.new("ShaderNodeOutputMaterial")
+    bsdf = nodes.new("ShaderNodeBsdfPrincipled")
+    tex = nodes.new("ShaderNodeTexImage")
+    uv = nodes.new("ShaderNodeTexCoord")
+
+    img = try_load(TEX + "2k_pluto.jpg")
+
+    if img:
+        tex.image = img
+        links.new(uv.outputs["UV"], tex.inputs["Vector"])
+        links.new(tex.outputs["Color"], bsdf.inputs["Base Color"])
+    else:
+        bsdf.inputs["Base Color"].default_value = (0.35, 0.30, 0.28, 1)
+
+    bsdf.inputs["Roughness"].default_value = 0.9
+    bsdf.inputs["Specular IOR Level"].default_value = 0.1
+
+    links.new(bsdf.outputs["BSDF"], out.inputs["Surface"])
+    return mat
+
+
+# ── Charon material ───────────────────────────────────────────────────────────
+def make_charon_mat():
+    mat = bpy.data.materials.new("CharonMat")
+    mat.use_nodes = True
+
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+
+    out = nodes.new("ShaderNodeOutputMaterial")
+    bsdf = nodes.new("ShaderNodeBsdfPrincipled")
+
+    bsdf.inputs["Base Color"].default_value = (0.55, 0.55, 0.58, 1)
+    bsdf.inputs["Roughness"].default_value = 0.95
+
+    links.new(bsdf.outputs["BSDF"], out.inputs["Surface"])
+    return mat
+
+
+# ── Star field ────────────────────────────────────────────────────────────────
+def star_field():
+    world = bpy.context.scene.world
+    world.use_nodes = True
+
+    nodes = world.node_tree.nodes
+    links = world.node_tree.links
+    nodes.clear()
+
+    wout = nodes.new("ShaderNodeOutputWorld")
+    bg = nodes.new("ShaderNodeBackground")
+    noise = nodes.new("ShaderNodeTexNoise")
+    ramp = nodes.new("ShaderNodeValToRGB")
+    tc = nodes.new("ShaderNodeTexCoord")
+
+    noise.inputs["Scale"].default_value = 500.0
+    noise.inputs["Detail"].default_value = 2.0
+
+    cr = ramp.color_ramp
+    cr.interpolation = 'CONSTANT'
+    cr.elements[0].position = 0.0
+    cr.elements[0].color = (0, 0, 0, 1)
+
+    star = cr.elements.new(0.975)
+    star.color = (1, 1, 1, 1)
+
+    bg.inputs["Strength"].default_value = 0.8
+
+    links.new(tc.outputs["Generated"], noise.inputs["Vector"])
+    links.new(noise.outputs["Fac"], ramp.inputs["Fac"])
+    links.new(ramp.outputs["Color"], bg.inputs["Color"])
+    links.new(bg.outputs["Background"], wout.inputs["Surface"])
+
+
+# ── SAFE animation helper ─────────────────────────────────────────────────────
+def animate(obj, end_rot):
+    obj.rotation_euler[2] = 0
+    obj.keyframe_insert(data_path="rotation_euler", frame=1)
+
+    obj.rotation_euler[2] = math.radians(end_rot)
+    obj.keyframe_insert(data_path="rotation_euler", frame=FRAMES)
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# PLUTO
+# ═════════════════════════════════════════════════════════════════════════════
+
+bpy.ops.mesh.primitive_uv_sphere_add(
+    radius=1.4, segments=96, ring_count=48, location=(0, 0, 0))
+
+pluto = bpy.context.active_object
+pluto.name = "Pluto"
+bpy.ops.object.shade_smooth()
+pluto.data.materials.append(make_pluto_mat())
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# CHARON (orbiting moon)
+# ═════════════════════════════════════════════════════════════════════════════
+
+bpy.ops.mesh.primitive_uv_sphere_add(
+    radius=0.5, segments=64, ring_count=32, location=(3.0, 0, 0))
+
+charon = bpy.context.active_object
+charon.name = "Charon"
+bpy.ops.object.shade_smooth()
+charon.data.materials.append(make_charon_mat())
+
+
+# Parent Charon to Pluto so it orbits
+charon.parent = pluto
+
+
+# Orbit animation (Charon around Pluto)
+charon.rotation_euler = (0, 0, 0)
+animate(charon, 360 * 6)  # orbit speed
+
+
+# Pluto spin
+animate(pluto, 360 * 1.5)
+
+
+# ── Lights ───────────────────────────────────────────────────────────────────
+bpy.ops.object.light_add(type='SUN', location=(6, -4, 3))
+sun = bpy.context.active_object
+sun.data.energy = 3.0
+sun.rotation_euler = (math.radians(30), 0, math.radians(-40))
+
+bpy.ops.object.light_add(type='SUN', location=(-5, 5, 1))
+fill = bpy.context.active_object
+fill.data.energy = 0.05
+fill.rotation_euler = (math.radians(20), 0, math.radians(130))
+
+
+# ── World ─────────────────────────────────────────────────────────────────────
+star_field()
+
+
+# ── Camera ────────────────────────────────────────────────────────────────────
+bpy.ops.object.camera_add(location=(0, -18, 5))
+cam = bpy.context.active_object
+cam.rotation_euler = (math.radians(75), 0, 0)
+cam.data.lens = 90
+bpy.context.scene.camera = cam
+
+
+# ── Render settings (Eevee safe OR Cycles safe) ───────────────────────────────
+scene = bpy.context.scene
+scene.render.engine = 'CYCLES'
+
+scene.cycles.samples = 16
+scene.cycles.use_adaptive_sampling = True
+scene.cycles.use_denoising = True
+
+scene.render.resolution_x = 1920
+scene.render.resolution_y = 1080
+scene.frame_start = 1
+scene.frame_end = FRAMES
+
+print("Pluto + Charon scene ready (stable Blender 5.1 version)")',
+    zipFile:"downloads/pluto.zip`
+}
+];
+
+function loadScript(index){
+
+    const p = scripts[index];
+
+    document.getElementById("scriptTitle").textContent = p.name;
+    document.getElementById("scriptCode").textContent = p.script;
+
+    document.getElementById("downloadBtn").href = p.zipFile;
+    document.getElementById("downloadBtn").textContent =
+    `Download ${p.name} ZIP`;
+
+    document.querySelectorAll(".tab-btn").forEach((btn,i)=>{
+        btn.classList.toggle("active", i === index);
+    });
+}
+
+const nav = document.getElementById("script-nav");
+
+scripts.forEach((planet,index)=>{
+    const btn = document.createElement("button");
+    btn.className = "tab-btn";
+    btn.textContent = planet.name;
+    btn.onclick = () => loadScript(index);
+
+    nav.appendChild(btn);
+});
+
+loadScript(0);
+  </script>
+
+  <footer class="footer">
+    FOR ACADEMIC PURPOSES ONLY<br>
+    © 2026 by Estanes, Charlie Jr. C.
+  </footer>
+
+  </body>
+  </html>

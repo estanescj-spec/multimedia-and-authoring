@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>
+			Multimedia & Authoring
+		</title>
+		<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap"
+		rel="stylesheet">
+		<style>
+			*{ margin:0; padding:0; box-sizing:border-box; } :root{ --primary:#2563eb;
+			--text:#1f2937; --muted:#6b7280; --border:#e5e7eb; } html{ scroll-behavior:smooth;
+			} body{ font-family:'DM Sans',sans-serif; background:#fafafa; color:var(--text);
+			} /*================ NAVBAR ================*/ .navbar{ position:fixed;
+			top:0; width:100%; height:68px; display:flex; justify-content:space-between;
+			align-items:center; padding:0 60px; background:rgba(255,255,255,0.92);
+			backdrop-filter:blur(12px); border:1px solid rgba(37,99,235,0.12); border-left:none;
+			border-right:none; border-top:none; box-shadow:0 12px 22px -14px rgba(15,23,42,0.42);
+			z-index:9999; transition:background 0.3s,box-shadow 0.3s,border-color 0.3s;
+			} .navbar.scrolled{ background:rgba(255,255,255,0.96); box-shadow:0 14px
+			26px -16px rgba(15,23,42,0.48); border-color:rgba(37,99,235,0.18); } .logo{font-weight:600;font-size:20px}
+			.logo span{color:var(--primary)} .nav-links{display:flex;gap:20px;align-items:center}
+			.nav-links a{ text-decoration:none; color:var(--muted); font-size:15px;
+			padding:8px 14px; border-radius:8px; transition:background 0.2s,color 0.2s,transform
+			0.2s; } .nav-links a:hover{ color:var(--primary); background:rgba(37,99,235,0.08);
+			transform:translateY(-1px); } /*================ HERO ================*/
+			.hero{ min-height:100vh; display:flex; align-items:center; position:relative;
+			overflow:hidden; padding:120px 70px; background: linear-gradient( 135deg,
+			#ffffff 0%, #f8fbff 55%, #edf4ff 100%); } .hero-content{ max-width:620px;
+			z-index:5; } .hero-label{ display:inline-block; color:var(--primary); font-size:12px;
+			letter-spacing:2px; font-weight:700; margin-bottom:18px; } .hero h1{ font-size:64px;
+			line-height:1.05; margin-bottom:22px; } .hero h1 span{ color:var(--primary);
+			} .hero-desc{ color:var(--muted); font-size:17px; line-height:1.8; margin-bottom:35px;
+			} .hero-buttons{ display:flex; align-items:center; gap:28px; } .primary-btn{
+			text-decoration:none; background:var(--primary); color:white; padding:15px
+			34px; border-radius:10px; font-weight:600; transition:.25s; } .primary-btn:hover{
+			transform:translateY(-3px); box-shadow:0 15px 35px rgba(37,99,235,.25);
+			} .secondary-btn{ text-decoration:none; color:var(--text); font-weight:600;
+			display:flex; gap:8px; align-items:center; transition:.25s; } .secondary-btn:hover{
+			color:var(--primary); } .secondary-btn span{ transition:.25s; } .secondary-btn:hover
+			span{ transform:translateX(5px); } /* Background Text */ .hero-bg{ position:absolute;
+			right:70px; top:50%; transform:translateY(-50%); font-size:320px; font-weight:700;
+			color:var(--primary); opacity:.04; pointer-events:none; user-select:none;
+			line-height:1; } /*================ FEATURED ================*/ .featured{
+			max-width:1200px; margin:auto; padding:80px 20px; } .featured h2{ font-size:34px;
+			margin-bottom:35px; } .featured-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+			gap:25px; } .project-card{ text-decoration:none; color:inherit; background:white;
+			border:1px solid var(--border); border-radius:15px; padding:22px; transition:.25s;
+			} .project-card:hover{ transform:translateY(-6px); border-color:var(--primary);
+			box-shadow:0 20px 40px rgba(0,0,0,.06); } .video-container{ width:100%;
+			aspect-ratio:16/9; overflow:hidden; border-radius:10px; margin-bottom:14px;
+			} .video-container iframe{ width:100%; height:100%; display:block; border:0;
+			} .project-card h3{ font-size:24px; margin-bottom:10px; } .project-card
+			p{ color:var(--muted); line-height:1.7; } .project-meta{ display:inline-block;
+			margin-top:16px; color:var(--primary); font-size:14px; font-weight:600;
+			} /*================ FOOTER ================*/ .footer{ padding:35px; text-align:center;
+			color:var(--muted); font-size:13px; } /*================ MOBILE ================*/
+			@media(max-width:900px){ .navbar{ padding:0 25px; } .hero{ padding:120px
+			25px 80px; } .hero h1{ font-size:48px; } .hero-bg{ display:none; } .hero-buttons{
+			flex-direction:column; align-items:flex-start; gap:18px; } }
+		</style>
+	</head>
+	<body>
+		<nav class="navbar">
+			<div class="logo">
+				Multimedia
+				<span>
+					&
+				</span>
+				Authoring
+			</div>
+			<div class="nav-links">
+				<a class="active" href="index.html">
+					Home
+				</a>
+				<a href="solar-system.html">
+					Solar System
+				</a>
+				<a href="rotoscope.html">
+					Rotoscope
+				</a>
+				<a href="about.html">
+					About
+				</a>
+			</div>
+		</nav>
+		<!-- HERO -->
+		<section class="hero">
+			<div class="hero-content">
+				<div class="hero-label">
+					BSIT PORTFOLIO
+				</div>
+				<h1>
+					Multimedia &
+					<br>
+					<span>
+						Authoring
+					</span>
+				</h1>
+				<p class="hero-desc">
+					A collection of multimedia projects showcasing 3D animation, Blender,
+					frame-by-frame rotoscope, and interactive authoring created for academic
+					purposes.
+				</p>
+				<div class="hero-buttons">
+					<a href="#featured" class="primary-btn">
+						View Projects
+					</a>
+					<a href="about.html" class="secondary-btn">
+						Learn More
+						<span>
+							→
+						</span>
+					</a>
+				</div>
+			</div>
+			<div class="hero-bg">
+				MA
+			</div>
+		</section>
+		<!-- FEATURED -->
+		<section class="featured" id="featured">
+			<h2>
+				Featured Projects
+			</h2>
+			<div class="featured-grid">
+				<a href="rotoscope.html" class="project-card">
+					<div class="video-container">
+						<iframe src="https://www.youtube.com/embed/PqQxTjK0mu0" title="Rotoscope"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+						allowfullscreen>
+						</iframe>
+					</div>
+					<h3>
+						Rotoscope
+					</h3>
+					<p>
+						Frame-by-frame live action rotoscope work with a structured production
+						timeline.
+					</p>
+					<span class="project-meta">
+						View Project →
+					</span>
+				</a>
+				<a href="solar-system.html" class="project-card">
+					<div class="video-container">
+						<iframe src="https://www.youtube.com/embed/D5LaKwsLDIo" title="Solar System"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+						allowfullscreen>
+						</iframe>
+					</div>
+					<h3>
+						Solar System
+					</h3>
+					<p>
+						3D planetary motion simulation created in Blender with a planet-year calculator.
+					</p>
+					<span class="project-meta">
+						View Project →
+					</span>
+				</a>
+			</div>
+		</section>
+		<footer class="footer">
+			FOR ACADEMIC PURPOSES ONLY
+			<br>
+			© 2026 by Estanes, Charlie Jr. C.
+		</footer>
+	</body>
+
+</html>
